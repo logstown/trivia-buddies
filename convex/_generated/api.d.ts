@@ -8,6 +8,9 @@
  * @module
  */
 
+import type * as group from "../group.js";
+import type * as opentdb from "../opentdb.js";
+import type * as questions from "../questions.js";
 import type * as users from "../users.js";
 
 import type {
@@ -17,6 +20,9 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  group: typeof group;
+  opentdb: typeof opentdb;
+  questions: typeof questions;
   users: typeof users;
 }>;
 

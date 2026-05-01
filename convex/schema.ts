@@ -11,6 +11,8 @@ export default defineSchema({
     name: v.string(),
     imageUrl: v.optional(v.string()),
     groupId: v.optional(v.id("groups")),
+    nextCategory: v.optional(v.number()),
+    numQuestionsPicked: v.number(),
   })
     .index("by_clerkId", ["clerkId"]) // Get a user by their Clerk ID
     .index("by_groupId", ["groupId"]), // Get users in a group
@@ -18,7 +20,8 @@ export default defineSchema({
   groups: defineTable({
     name: v.string(),
     hostId: v.id("users"),
-  }),
+    isReady: v.boolean(),
+  }).index("by_isReady", ["isReady"]), // Get a group by its readiness status
 
   questions: defineTable({
     groupId: v.id("groups"),
@@ -31,8 +34,8 @@ export default defineSchema({
     category: v.string(),
     question: v.string(),
     correctAnswer: v.string(),
-    incorrectAnswers: v.array(v.string()),
-  }),
+    answers: v.array(v.string()),
+  }).index("by_groupId", ["groupId"]), // Get questions for a group
 
   playerAnswers: defineTable({
     playerId: v.id("users"),
