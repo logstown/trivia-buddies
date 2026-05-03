@@ -21,6 +21,26 @@ export const getGroupQuestions = internalQuery({
   },
 });
 
+export const addQuestionUponCreateGroup = internalAction({
+  args: {
+    groupId: v.id("groups"),
+  },
+  handler: async (ctx, { groupId }) => {
+    const question = await ctx.runAction(internal.opentdb.fetchQuestion, {
+      categoryId: undefined,
+    });
+    await ctx.runMutation(internal.questions.addGroupQuestion, {
+      groupId,
+      type: question.type,
+      difficulty: question.difficulty,
+      category: question.category,
+      question: question.question,
+      correctAnswer: question.correct_answer,
+      incorrectAnswers: question.incorrect_answers,
+    });
+  },
+});
+
 export const addNewGroupQuestion = internalAction({
   args: {},
   handler: async (ctx) => {
