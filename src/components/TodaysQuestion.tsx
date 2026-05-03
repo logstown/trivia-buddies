@@ -3,6 +3,7 @@ import { api } from "../../convex/_generated/api";
 import { decodeHtmlEntities } from "../utils/decodeHtmlEntities";
 import { useEffect, useState } from "react";
 import { Avatar } from "./Avatar";
+import { formatDate } from "date-fns";
 
 export const TodaysQuestion = () => {
   const question = useQuery(api.questions.getTodaysQuestion);
@@ -57,15 +58,19 @@ export const TodaysQuestion = () => {
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col items-start gap-8">
-      <h1 className="text-lg uppercase">Today&apos;s Question</h1>
+      <h1 className="text-lg uppercase text-base-content/50">
+        Question for {formatDate(new Date(), "MMMM do, yyyy")}
+      </h1>
       <div className="flex flex-col gap-2">
-        <div className="flex items-baseline gap-2">
-          <h2 className="text-2xl font-semibold">{question.category}</h2>
-          <div className={`badge badge-soft capitalize ${badgeColor}`}>
+        <div className="flex gap-2 items-baseline">
+          <h2>Category: {question.category}</h2>
+          <div className={`badge badge-soft badge-sm capitalize ${badgeColor}`}>
             {question.difficulty}
           </div>
         </div>
-        <p className="text-xl ">{decodeHtmlEntities(question.question)}</p>
+        <p className="text-2xl font-semibold ">
+          {decodeHtmlEntities(question.question)}
+        </p>
       </div>
       <div className="flex flex-col gap-4">
         {question.answers.map((answer, index) => (
@@ -88,11 +93,12 @@ export const TodaysQuestion = () => {
             </span>
             <div className="flex gap-1">
               {questionAnswers?.answerUsers[answer]?.map((user, idx) => (
-                <Avatar
-                  key={idx}
-                  name={user.playerName}
-                  imageUrl={user.playerImageUrl}
-                />
+                <div className="tooltip" data-tip={user.playerName} key={idx}>
+                  <Avatar
+                    name={user.playerName}
+                    imageUrl={user.playerImageUrl}
+                  />
+                </div>
               ))}
             </div>
           </label>

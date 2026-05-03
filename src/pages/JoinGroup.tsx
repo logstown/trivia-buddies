@@ -22,7 +22,7 @@ export default function JoinGroup() {
     }
   };
 
-  if (!group) {
+  if (group === null) {
     return (
       <section className="mx-auto flex max-w-3xl flex-col gap-8 text-center">
         <h1 className="text-4xl font-bold">Group Not Found</h1>
