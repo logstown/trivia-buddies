@@ -1,12 +1,36 @@
 import { TodaysQuestion } from "@/components/TodaysQuestion";
-import { useQuery, useMutation } from "convex/react";
+import { useState } from "react";
+import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import CreateGroup from "@/components/CreateGroup";
-import { Avatar } from "@/components/Avatar";
 
 export function HomePage() {
+  const [createdGroupJoinUrl, setCreatedGroupJoinUrl] = useState("");
+  const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "failed">(
+    "idle",
+  );
   const user = useQuery(api.users.getCurrentUser);
   const group = useQuery(api.group.getGroupByUser, user ? {} : "skip");
+
+  const handleGroupCreated = (joinUrl: string) => {
+    setCreatedGroupJoinUrl(joinUrl);
+    setCopyStatus("idle");
+  };
+
+  const handleCloseModal = () => {
+    setCreatedGroupJoinUrl("");
+    setCopyStatus("idle");
+  };
+
+  const handleCopyJoinUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(createdGroupJoinUrl);
+      setCopyStatus("copied");
+    } catch (error) {
+      console.error("Error copying join URL:", error);
+      setCopyStatus("failed");
+    }
+  };
 
   if (group === undefined) {
     return (
@@ -19,9 +43,52 @@ export function HomePage() {
   }
 
   return (
-    <section className="mx-auto flex max-w-3xl flex-col items-start gap-8">
-      {group ? <TodaysQuestion /> : <CreateGroup />}
-    </section>
+    <>
+      <section className="mx-auto flex max-w-3xl flex-col items-start gap-8">
+        {group ? (
+          <TodaysQuestion />
+        ) : (
+          <CreateGroup onGroupCreated={handleGroupCreated} />
+        )}
+      </section>
+
+      {createdGroupJoinUrl && (
+        <dialog className="modal" open>
+          <div className="modal-box">
+            <h3 className="text-lg font-bold">Invite friends to your group</h3>
+            <p className="py-4">
+              Share this link with friends so they can join your group.
+            </p>
+            <div className="join w-full">
+              <input
+                className="input join-item w-full font-mono text-sm"
+                value={createdGroupJoinUrl}
+                readOnly
+              />
+              <button
+                className="btn btn-primary join-item"
+                onClick={() => void handleCopyJoinUrl()}
+              >
+                {copyStatus === "copied" ? "Copied" : "Copy"}
+              </button>
+            </div>
+            {copyStatus === "failed" && (
+              <p className="mt-2 text-sm text-error">
+                Copy failed. You can select the link and copy it manually.
+              </p>
+            )}
+            <div className="modal-action">
+              <button className="btn" onClick={handleCloseModal}>
+                Done
+              </button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button onClick={handleCloseModal}>close</button>
+          </form>
+        </dialog>
+      )}
+    </>
   );
 }
 
