@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "convex/react";
-import { api } from "../convex/_generated/api";
-import { decodeHtmlEntities } from "./utils/decodeHtmlEntities";
+import { api } from "../../convex/_generated/api";
+import { decodeHtmlEntities } from "../utils/decodeHtmlEntities";
 import { useEffect, useState } from "react";
 import { Avatar } from "./Avatar";
 
@@ -44,16 +44,26 @@ export const TodaysQuestion = () => {
       ? "text-success"
       : "text-error";
 
+  const badgeColor =
+    question.difficulty === "easy"
+      ? "badge-success"
+      : question.difficulty === "medium"
+        ? "badge-warning"
+        : "badge-error";
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedAnswer(event.target.value);
   };
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col items-start gap-8">
-      <h1 className="text-2xl font-bold">Today&apos;s Question</h1>
+      <h1 className="text-lg uppercase">Today&apos;s Question</h1>
       <div className="flex flex-col gap-2">
-        <div className="badge badge-primary badge-soft">
-          {question.category}
+        <div className="flex items-baseline gap-2">
+          <h2 className="text-2xl font-semibold">{question.category}</h2>
+          <div className={`badge badge-soft capitalize ${badgeColor}`}>
+            {question.difficulty}
+          </div>
         </div>
         <p className="text-xl ">{decodeHtmlEntities(question.question)}</p>
       </div>
