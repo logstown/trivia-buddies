@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as crons from "../crons.js";
 import type * as group from "../group.js";
 import type * as opentdb from "../opentdb.js";
 import type * as questions from "../questions.js";
@@ -20,6 +21,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  crons: typeof crons;
   group: typeof group;
   opentdb: typeof opentdb;
   questions: typeof questions;

@@ -20,8 +20,7 @@ export default defineSchema({
   groups: defineTable({
     name: v.string(),
     hostId: v.id("users"),
-    isReady: v.boolean(),
-  }).index("by_isReady", ["isReady"]), // Get a group by its readiness status
+  }),
 
   questions: defineTable({
     groupId: v.id("groups"),

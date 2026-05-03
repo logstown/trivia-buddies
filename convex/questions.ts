@@ -1,5 +1,6 @@
 import {
   action,
+  internalAction,
   internalMutation,
   internalQuery,
   mutation,
@@ -20,7 +21,7 @@ export const getGroupQuestions = internalQuery({
   },
 });
 
-export const addNewQuestion = action({
+export const addNewGroupQuestion = internalAction({
   args: {},
   handler: async (ctx) => {
     const allGroups = await ctx.runQuery(internal.group.getReadyGroups);
@@ -42,6 +43,7 @@ export const addNewQuestion = action({
       let question: Awaited<
         ReturnType<typeof ctx.runAction<typeof internal.opentdb.fetchQuestion>>
       >;
+
       let alreadyUsed: boolean;
       do {
         await new Promise((resolve) => setTimeout(resolve, 6000)); // Avoid hammering the API in case of many duplicates

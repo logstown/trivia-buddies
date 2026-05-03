@@ -64,10 +64,7 @@ export const getGroupByUser = query({
 export const getReadyGroups = internalQuery({
   args: {},
   handler: async (ctx) => {
-    const groups = await ctx.db
-      .query("groups")
-      .withIndex("by_isReady", (q) => q.eq("isReady", true))
-      .collect();
+    const groups = await ctx.db.query("groups").collect();
     return groups;
   },
 });
@@ -91,7 +88,6 @@ export const createGroup = mutation({
     const groupId = await ctx.db.insert("groups", {
       name,
       hostId: user._id,
-      isReady: false,
     });
 
     await ctx.db.patch("users", user._id, {
@@ -124,34 +120,6 @@ export const joinGroup = mutation({
 
     await ctx.db.patch("users", user._id, {
       groupId,
-    });
-
-    return null;
-  },
-});
-
-export const startGame = mutation({
-  args: {},
-  returns: v.null(),
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
-
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.tokenIdentifier))
-      .unique();
-
-    if (!user) throw new Error("User not found");
-    if (!user.groupId) throw new Error("User is not in a group");
-
-    const group = await ctx.db.get("groups", user.groupId);
-    if (!group) throw new Error("Group not found");
-    if (group.hostId !== user._id)
-      throw new Error("Only the host can start the game");
-
-    await ctx.db.patch("groups", group._id, {
-      isReady: true,
     });
 
     return null;
