@@ -9,13 +9,6 @@ export const Navbar = () => {
           Trivia Buddies
         </NavLink>
       </div>
-      <div className="flex-none">
-        <ul className="menu menu-horizontal px-1">
-          <li>
-            <NavLink to="/your-next-category">Next Category</NavLink>
-          </li>
-        </ul>
-      </div>
       <UserButton />
     </div>
   );

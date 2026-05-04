@@ -4,6 +4,8 @@ import { decodeHtmlEntities } from "../utils/decodeHtmlEntities";
 import { useState } from "react";
 import { Avatar } from "./Avatar";
 import { formatDate } from "date-fns";
+import { PencilIcon } from "lucide-react";
+import YourNextCategory from "./YourNextCategory";
 
 export const TodaysQuestion = () => {
   const question = useQuery(api.questions.getTodaysQuestion);
@@ -11,11 +13,17 @@ export const TodaysQuestion = () => {
     api.questions.getQuestionAnswers,
     question ? { questionId: question._id } : "skip",
   );
+  const currentUser = useQuery(api.users.getCurrentUser);
+  const group = useQuery(api.group.getGroupByUser);
   const submitAnswer = useMutation(api.questions.submitAnswer);
   const [selectedAnswer, setSelectedAnswer] = useState<{
     questionId: string;
     answer: string;
   } | null>(null);
+  const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "failed">(
+    "idle",
+  );
+  const [showEditCategory, setShowEditCategory] = useState(false);
 
   if (question === undefined) {
     return (
@@ -81,6 +89,8 @@ export const TodaysQuestion = () => {
     ? "border-success/30 bg-success/10 text-success"
     : "border-error/30 bg-error/10 text-error";
 
+  const joinUrl = `${window.location.origin}/join-group/${question.groupId}`;
+
   const answerTone = (answer: string) => {
     if (isAnswered && answer === question.correctAnswer) {
       return "border-success/40 bg-success/10";
@@ -101,78 +111,95 @@ export const TodaysQuestion = () => {
     return `border-base-300 bg-base-100 ${tone}`;
   };
 
+  const handleCopyJoinUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(joinUrl);
+      setCopyStatus("copied");
+    } catch (error) {
+      console.error("Error copying join URL:", error);
+      setCopyStatus("failed");
+    }
+  };
+
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      <header className="flex flex-col gap-2">
-        <p className="text-sm font-semibold uppercase tracking-wide text-base-content/50">
-          {formatDate(new Date(), "MMMM do, yyyy")}
-        </p>
-        <div className="flex flex-wrap items-center gap-4">
-          <h1 className="text-3xl font-bold tracking-normal text-base-content">
-            Today&apos;s Question
-          </h1>
-          {isAnswered && (
-            <div
-              className={`badge badge-lg font-bold tracking-wide ${resultTone}`}
-            >
-              {resultIsCorrect ? "CORRECT" : "INCORRECT"}
+    <div className="drawer lg:drawer-open drawer-end">
+      <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
+      <div className="drawer-content flex flex-col justify-start">
+        {/* Page content here */}
+        <label htmlFor="my-drawer-3" className="btn drawer-button lg:hidden">
+          Open drawer
+        </label>
+        <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+          <header className="flex flex-col gap-2">
+            <p className="text-sm font-semibold uppercase tracking-wide text-base-content/50">
+              {formatDate(new Date(), "MMMM do, yyyy")}
+            </p>
+            <div className="flex flex-wrap items-center gap-4">
+              <h1 className="text-3xl font-bold tracking-normal text-base-content">
+                Today&apos;s Question
+              </h1>
+              {isAnswered && (
+                <div
+                  className={`badge badge-lg font-bold tracking-wide ${resultTone}`}
+                >
+                  {resultIsCorrect ? "CORRECT" : "INCORRECT"}
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </header>
+          </header>
 
-      <section className="rounded-box border border-base-300 bg-base-100 p-5 shadow-sm sm:p-7">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="badge badge-neutral badge-soft max-w-full truncate">
-            {question.category}
-          </span>
-          {isAnswered && (
-            <span className={`badge badge-soft capitalize ${badgeColor}`}>
-              {question.difficulty}
-            </span>
-          )}
-        </div>
+          <section className="rounded-box border border-base-300 bg-base-100 p-5 shadow-sm sm:p-7">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="badge badge-neutral badge-soft max-w-full truncate">
+                {question.category}
+              </span>
+              {isAnswered && (
+                <span className={`badge badge-soft capitalize ${badgeColor}`}>
+                  {question.difficulty}
+                </span>
+              )}
+            </div>
 
-        <p className="mt-4 text-2xl font-semibold leading-snug text-base-content sm:text-3xl">
-          {decodeHtmlEntities(question.question)}
-        </p>
-      </section>
+            <p className="mt-4 text-2xl font-semibold leading-snug text-base-content sm:text-3xl">
+              {decodeHtmlEntities(question.question)}
+            </p>
+          </section>
 
-      <section className="flex flex-col gap-3" aria-label="Answer choices">
-        {question.answers.map((answer, index) => {
-          const isCorrectAnswer =
-            isAnswered && answer === question.correctAnswer;
-          const isUserAnswer =
-            isAnswered && answer === questionAnswers.userAnswer;
+          <section className="flex flex-col gap-3" aria-label="Answer choices">
+            {question.answers.map((answer, index) => {
+              const isCorrectAnswer =
+                isAnswered && answer === question.correctAnswer;
+              const isUserAnswer =
+                isAnswered && answer === questionAnswers.userAnswer;
 
-          return (
-            <label
-              key={index}
-              className={`flex flex-col gap-3 rounded-box border p-4 transition sm:flex-row sm:items-center sm:justify-between ${answerTone(answer)} ${
-                isAnswered ? "cursor-default" : ""
-              }`}
-            >
-              <div className="flex min-w-0 items-center gap-3">
-                <input
-                  disabled={isAnswered}
-                  type="radio"
-                  className="radio radio-primary shrink-0"
-                  name="answer"
-                  value={answer}
-                  checked={displayedAnswer === answer}
-                  onChange={handleChange}
-                />
-                <span
-                  className={`min-w-0 text-base leading-snug text-base-content ${
-                    isCorrectAnswer ? "font-bold" : "font-medium"
+              return (
+                <label
+                  key={index}
+                  className={`flex flex-col gap-3 rounded-box border p-4 transition sm:flex-row sm:items-center sm:justify-between ${answerTone(answer)} ${
+                    isAnswered ? "cursor-default" : ""
                   }`}
                 >
-                  {decodeHtmlEntities(answer)}
-                </span>
-              </div>
+                  <div className="flex min-w-0 items-center gap-3">
+                    <input
+                      disabled={isAnswered}
+                      type="radio"
+                      className="radio radio-primary shrink-0"
+                      name="answer"
+                      value={answer}
+                      checked={displayedAnswer === answer}
+                      onChange={handleChange}
+                    />
+                    <span
+                      className={`min-w-0 text-base leading-snug text-base-content ${
+                        isCorrectAnswer ? "font-bold" : "font-medium"
+                      }`}
+                    >
+                      {decodeHtmlEntities(answer)}
+                    </span>
+                  </div>
 
-              <div className="flex items-center justify-between gap-3 sm:justify-end">
-                {/* {isAnswered && (isCorrectAnswer || isUserAnswer) && (
+                  <div className="flex items-center justify-between gap-3 sm:justify-end">
+                    {/* {isAnswered && (isCorrectAnswer || isUserAnswer) && (
                   <span
                     className={`badge badge-sm ${
                       isCorrectAnswer
@@ -189,40 +216,121 @@ export const TodaysQuestion = () => {
                         : null}
                   </span>
                 )} */}
-                <div className="flex min-h-8 flex-wrap justify-end gap-1">
-                  {questionAnswers?.answerUsers[answer]?.map((user, idx) => (
-                    <div
-                      className="tooltip"
-                      data-tip={user.playerName}
-                      key={idx}
-                    >
-                      <Avatar
-                        name={user.playerName}
-                        imageUrl={user.playerImageUrl}
-                      />
+                    <div className="flex min-h-8 flex-wrap justify-end gap-1">
+                      {questionAnswers?.answerUsers[answer]?.map(
+                        (user, idx) => (
+                          <div
+                            className="tooltip"
+                            data-tip={user.playerName}
+                            key={idx}
+                          >
+                            <Avatar
+                              name={user.playerName}
+                              imageUrl={user.playerImageUrl}
+                            />
+                          </div>
+                        ),
+                      )}
                     </div>
-                  ))}
-                </div>
-              </div>
-            </label>
-          );
-        })}
-      </section>
+                  </div>
+                </label>
+              );
+            })}
+          </section>
 
-      <footer className="flex items-center justify-between gap-4">
-        {!isAnswered && (
-          <button
-            className="btn btn-primary"
-            onClick={() => {
-              if (!displayedAnswer) return;
-              void submitAnswer({ answer: displayedAnswer });
-            }}
-            disabled={!displayedAnswer}
-          >
-            Submit Answer
-          </button>
-        )}
-      </footer>
+          <footer className="flex items-center justify-between gap-4">
+            {!isAnswered && (
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  if (!displayedAnswer) return;
+                  void submitAnswer({ answer: displayedAnswer });
+                }}
+                disabled={!displayedAnswer}
+              >
+                Submit Answer
+              </button>
+            )}
+          </footer>
+        </div>
+      </div>
+      <div className="drawer-side justify-items-start">
+        <label
+          htmlFor="my-drawer-3"
+          aria-label="close sidebar"
+          className="drawer-overlay"
+        ></label>
+        {/* <ul className="menu bg-base-200 w-80 p-4">
+          <li>
+            <a>Sidebar Item 1</a>
+          </li>
+          <li>
+            <a>Sidebar Item 2</a>
+          </li>
+        </ul> */}
+        <div className="flex flex-col gap-8">
+          <ul className="list bg-base-100 rounded-box shadow-md">
+            <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
+              Have Yet to Answer
+            </li>
+
+            {questionAnswers?.answerUsers.hasntAnswered?.map((user, idx) => (
+              <li className="list-row items-center" key={idx}>
+                <Avatar name={user.playerName} imageUrl={user.playerImageUrl} />
+                <div>{user.playerName}</div>
+              </li>
+            ))}
+          </ul>
+          <ul className="list bg-base-100 rounded-box shadow-md">
+            <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
+              Your next question's category
+            </li>
+
+            <li className="list-row items-center">
+              <div className="badge badge-lg badge-neutral badge-soft ">
+                {currentUser?.nextCategory.name ?? "Random"}
+              </div>
+              <button
+                className="btn btn-ghost btn-xs btn-square"
+                onClick={() => setShowEditCategory(true)}
+              >
+                <PencilIcon size={15} />
+              </button>
+            </li>
+          </ul>
+          {group?.hostId === currentUser?._id && (
+            <div>
+              <h3 className="text-lg font-bold">
+                Invite friends to your group
+              </h3>
+              <p className="py-4">
+                Share this link with friends so they can join your group.
+              </p>
+              <div className="join w-full">
+                <input
+                  className="input join-item w-full font-mono text-sm"
+                  value={joinUrl}
+                  readOnly
+                />
+                <button
+                  className="btn btn-primary join-item"
+                  onClick={() => void handleCopyJoinUrl()}
+                >
+                  {copyStatus === "copied" ? "Copied" : "Copy"}
+                </button>
+              </div>
+              {copyStatus === "failed" && (
+                <p className="mt-2 text-sm text-error">
+                  Copy failed. You can select the link and copy it manually.
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+      {showEditCategory && (
+        <YourNextCategory handleCloseModal={() => setShowEditCategory(false)} />
+      )}
     </div>
   );
 };

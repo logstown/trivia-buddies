@@ -1,5 +1,4 @@
 import {
-  action,
   internalAction,
   internalMutation,
   internalQuery,
@@ -8,7 +7,7 @@ import {
 } from "./_generated/server";
 import { api, internal } from "./_generated/api";
 import { v } from "convex/values";
-import { groupBy, minBy } from "lodash";
+import { find, groupBy, minBy } from "lodash";
 
 export const getGroupQuestions = internalQuery({
   args: { groupId: v.id("groups") },
@@ -68,7 +67,7 @@ export const addNewGroupQuestion = internalAction({
       do {
         await new Promise((resolve) => setTimeout(resolve, 6000)); // Avoid hammering the API in case of many duplicates
         question = await ctx.runAction(internal.opentdb.fetchQuestion, {
-          categoryId: nextCategoryUser?.nextCategory,
+          categoryId: nextCategoryUser?.nextCategory.id,
         });
 
         alreadyUsed = groupQuestions.some(
@@ -176,8 +175,6 @@ export const getQuestionAnswers = query({
       .withIndex("questionId", (q) => q.eq("questionId", questionId))
       .collect();
 
-    if (answers.length === 0) return null;
-
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return null;
     const user = await ctx.db
@@ -187,25 +184,30 @@ export const getQuestionAnswers = query({
     if (!user) return null;
 
     const userAnswer = answers.find((a) => a.playerId === user._id);
-    if (!userAnswer) return null;
 
-    const answersWithUserInfo = await Promise.all(
-      answers
-        .filter((a) => a.playerId !== user._id)
-        .map(async (answer) => {
-          const player = await ctx.db.get("users", answer.playerId);
-          return {
-            answer: answer.answer,
-            playerName: player?.name ?? "Unknown Player",
-            playerImageUrl: player?.imageUrl,
-          };
-        }),
-    );
+    const groupUsers = await ctx.db
+      .query("users")
+      .withIndex("by_groupId", (q) => q.eq("groupId", user.groupId!))
+      .collect();
 
-    const answerUsers = groupBy(answersWithUserInfo, "answer");
+    const usersWithAnswer = groupUsers
+      //   .filter((u) => u._id !== user._id)
+      .map((u) => {
+        const userAnswer = find(answers, { playerId: u._id });
+
+        return {
+          playerName: u?.name ?? "Unknown Player",
+          playerImageUrl: u?.imageUrl,
+          answer: userAnswer?.answer,
+        };
+      });
+
+    const answerUsers = groupBy(usersWithAnswer, (u) => {
+      return u.answer || "hasntAnswered";
+    });
 
     return {
-      userAnswer: userAnswer.answer,
+      userAnswer: userAnswer?.answer,
       answerUsers,
     };
   },

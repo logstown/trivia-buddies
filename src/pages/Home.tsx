@@ -44,7 +44,7 @@ export function HomePage() {
 
   return (
     <>
-      <section className="mx-auto flex max-w-3xl flex-col items-start gap-8">
+      <section className="flex flex-col items-start gap-8 w-full">
         {group ? (
           <TodaysQuestion />
         ) : (

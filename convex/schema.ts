@@ -11,7 +11,10 @@ export default defineSchema({
     name: v.string(),
     imageUrl: v.optional(v.string()),
     groupId: v.optional(v.id("groups")),
-    nextCategory: v.optional(v.number()),
+    nextCategory: v.object({
+      id: v.number(),
+      name: v.string(),
+    }),
     numQuestionsPicked: v.number(),
   })
     .index("by_clerkId", ["clerkId"]) // Get a user by their Clerk ID

@@ -22,6 +22,10 @@ export const upsertCurrentUser = mutation({
         name: identity.name || "Anonymous",
         imageUrl: identity.pictureUrl,
         numQuestionsPicked: 0,
+        nextCategory: {
+          id: 0,
+          name: "Random",
+        },
       });
     }
     return null;
@@ -62,7 +66,10 @@ export const getUsersInGroup = query({
 
 export const updateNextCategory = mutation({
   args: {
-    nextCategory: v.optional(v.number()),
+    nextCategory: v.object({
+      id: v.number(),
+      name: v.string(),
+    }),
   },
   returns: v.null(),
   handler: async (ctx, { nextCategory }) => {
@@ -73,6 +80,8 @@ export const updateNextCategory = mutation({
       .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.tokenIdentifier))
       .unique();
     if (!user) return null;
+
+    console.log(nextCategory);
     await ctx.db.patch("users", user._id, {
       nextCategory,
     });

@@ -12,12 +12,12 @@ export default function YourNextCategory({
   const fetchCategories = useAction(api.opentdb.fetchCategories);
   const updateNextCategory = useMutation(api.users.updateNextCategory);
 
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<number>(0);
   const [categories, setCategories] = useState<OpenTDBCategory[]>([]);
 
   useEffect(() => {
     if (user === undefined) return;
-    setSelectedCategory(user?.nextCategory ?? null);
+    setSelectedCategory(user?.nextCategory.id ?? 0);
   }, [user]);
 
   useEffect(() => {
@@ -36,8 +36,13 @@ export default function YourNextCategory({
   }
 
   const handleSave = async () => {
+    console.log(selectedCategory);
     await updateNextCategory({
-      nextCategory: selectedCategory ?? undefined,
+      nextCategory: {
+        id: selectedCategory,
+        name:
+          categories.find((c) => c.id === selectedCategory)?.name ?? "Random",
+      },
     });
 
     handleCloseModal();
@@ -54,9 +59,7 @@ export default function YourNextCategory({
           className="select select-bordered w-full max-w-xs"
           value={selectedCategory ?? ""}
           onChange={(e) =>
-            setSelectedCategory(
-              e.target.value ? parseInt(e.target.value) : null,
-            )
+            setSelectedCategory(e.target.value ? parseInt(e.target.value) : 0)
           }
         >
           <option value="">Random</option>
