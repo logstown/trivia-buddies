@@ -218,7 +218,7 @@ export const TodaysQuestion = () => {
             ))}
           </section>
 
-          <footer className="flex items-center justify-between gap-4">
+          <footer className="flex justify-end ">
             {!isAnswered && (
               <button
                 className="btn btn-primary"
@@ -259,7 +259,7 @@ export const TodaysQuestion = () => {
             </li>
 
             <li className="list-row items-center">
-              <div className="badge badge-lg badge-neutral badge-soft ">
+              <div className="badge badge-lg badge-secondary badge-soft ">
                 {currentUser?.nextCategory.name ?? "Random"}
               </div>
               <button
@@ -289,7 +289,7 @@ export const TodaysQuestion = () => {
                       readOnly
                     />
                     <button
-                      className="btn btn-primary join-item"
+                      className="btn btn-soft join-item"
                       onClick={() => void handleCopyJoinUrl()}
                     >
                       {copyStatus === "copied" ? "Copied" : "Copy"}
@@ -306,6 +306,9 @@ export const TodaysQuestion = () => {
           )}
         </div>
       </div>
+      {showEditCategory && (
+        <YourNextCategory handleCloseModal={() => setShowEditCategory(false)} />
+      )}
     </div>
   );
 };

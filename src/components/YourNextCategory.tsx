@@ -70,7 +70,7 @@ export default function YourNextCategory({
           ))}
         </select>
         <div className="modal-action">
-          <button className="btn" onClick={handleSave}>
+          <button className="btn btn-neutral" onClick={handleSave}>
             Save
           </button>
         </div>
