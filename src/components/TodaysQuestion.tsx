@@ -128,7 +128,7 @@ export const TodaysQuestion = () => {
   return (
     <div className="drawer lg:drawer-open drawer-end">
       <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content flex flex-col justify-start">
+      <div className="drawer-content">
         {/* Page content here */}
         <label htmlFor="my-drawer-3" className="btn drawer-button lg:hidden">
           Open drawer
@@ -266,7 +266,7 @@ export const TodaysQuestion = () => {
                 className="btn btn-ghost btn-xs btn-square"
                 onClick={() => setShowEditCategory(true)}
               >
-                <PencilIcon size={15} />
+                <PencilIcon size={13} />
               </button>
             </li>
           </ul>
@@ -306,9 +306,6 @@ export const TodaysQuestion = () => {
           )}
         </div>
       </div>
-      {showEditCategory && (
-        <YourNextCategory handleCloseModal={() => setShowEditCategory(false)} />
-      )}
     </div>
   );
 };
