@@ -111,6 +111,10 @@ export const TodaysQuestion = () => {
     return `border-base-300 bg-base-100 ${tone}`;
   };
 
+  const title = question.user
+    ? `${question.user.name}'s Question`
+    : "Today's Question";
+
   const handleCopyJoinUrl = async () => {
     try {
       await navigator.clipboard.writeText(joinUrl);
@@ -136,7 +140,7 @@ export const TodaysQuestion = () => {
             </p>
             <div className="flex flex-wrap items-center gap-4">
               <h1 className="text-3xl font-bold tracking-normal text-base-content">
-                Today&apos;s Question
+                {title}
               </h1>
               {isAnswered && (
                 <div
@@ -166,76 +170,52 @@ export const TodaysQuestion = () => {
           </section>
 
           <section className="flex flex-col gap-3" aria-label="Answer choices">
-            {question.answers.map((answer, index) => {
-              const isCorrectAnswer =
-                isAnswered && answer === question.correctAnswer;
-              const isUserAnswer =
-                isAnswered && answer === questionAnswers.userAnswer;
-
-              return (
-                <label
-                  key={index}
-                  className={`flex flex-col gap-3 rounded-box border p-4 transition sm:flex-row sm:items-center sm:justify-between ${answerTone(answer)} ${
-                    isAnswered ? "cursor-default" : ""
-                  }`}
-                >
-                  <div className="flex min-w-0 items-center gap-3">
-                    <input
-                      disabled={isAnswered}
-                      type="radio"
-                      className="radio radio-primary shrink-0"
-                      name="answer"
-                      value={answer}
-                      checked={displayedAnswer === answer}
-                      onChange={handleChange}
-                    />
-                    <span
-                      className={`min-w-0 text-base leading-snug text-base-content ${
-                        isCorrectAnswer ? "font-bold" : "font-medium"
-                      }`}
-                    >
-                      {decodeHtmlEntities(answer)}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3 sm:justify-end">
-                    {/* {isAnswered && (isCorrectAnswer || isUserAnswer) && (
+            {question.answers.map((answer, index) => (
+              <label
+                key={index}
+                className={`flex flex-col gap-3 rounded-box border p-4 transition sm:flex-row sm:items-center sm:justify-between ${answerTone(answer)} ${
+                  isAnswered ? "cursor-default" : ""
+                }`}
+              >
+                <div className="flex min-w-0 items-center gap-3">
+                  <input
+                    disabled={isAnswered}
+                    type="radio"
+                    className="radio radio-primary shrink-0"
+                    name="answer"
+                    value={answer}
+                    checked={displayedAnswer === answer}
+                    onChange={handleChange}
+                  />
                   <span
-                    className={`badge badge-sm ${
-                      isCorrectAnswer
-                        ? "badge-success"
-                        : isUserAnswer
-                          ? "badge-error"
-                          : "badge-ghost"
+                    className={`min-w-0 text-base leading-snug text-base-content ${
+                      isAnswered && answer === question.correctAnswer
+                        ? "font-bold"
+                        : "font-medium"
                     }`}
                   >
-                    {isCorrectAnswer
-                      ? "Correct answer"
-                      : isUserAnswer
-                        ? "Your answer"
-                        : null}
+                    {decodeHtmlEntities(answer)}
                   </span>
-                )} */}
-                    <div className="flex min-h-8 flex-wrap justify-end gap-1">
-                      {questionAnswers?.answerUsers[answer]?.map(
-                        (user, idx) => (
-                          <div
-                            className="tooltip"
-                            data-tip={user.playerName}
-                            key={idx}
-                          >
-                            <Avatar
-                              name={user.playerName}
-                              imageUrl={user.playerImageUrl}
-                            />
-                          </div>
-                        ),
-                      )}
-                    </div>
+                </div>
+
+                <div className="flex items-center justify-between gap-3 sm:justify-end">
+                  <div className="flex min-h-8 flex-wrap justify-end gap-1">
+                    {questionAnswers?.answerUsers[answer]?.map((user, idx) => (
+                      <div
+                        className="tooltip"
+                        data-tip={user.playerName}
+                        key={idx}
+                      >
+                        <Avatar
+                          name={user.playerName}
+                          imageUrl={user.playerImageUrl}
+                        />
+                      </div>
+                    ))}
                   </div>
-                </label>
-              );
-            })}
+                </div>
+              </label>
+            ))}
           </section>
 
           <footer className="flex items-center justify-between gap-4">
@@ -260,18 +240,10 @@ export const TodaysQuestion = () => {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        {/* <ul className="menu bg-base-200 w-80 p-4">
-          <li>
-            <a>Sidebar Item 1</a>
-          </li>
-          <li>
-            <a>Sidebar Item 2</a>
-          </li>
-        </ul> */}
         <div className="flex flex-col gap-8">
           <ul className="list bg-base-100 rounded-box shadow-md">
-            <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
-              Have Yet to Answer
+            <li className="p-4 pb-2 text-xs opacity-60 tracking-wide uppercase">
+              Yet to Answer
             </li>
 
             {questionAnswers?.answerUsers.hasntAnswered?.map((user, idx) => (
@@ -282,7 +254,7 @@ export const TodaysQuestion = () => {
             ))}
           </ul>
           <ul className="list bg-base-100 rounded-box shadow-md">
-            <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
+            <li className="p-4 pb-2 text-xs opacity-60 tracking-wide uppercase">
               Your next question's category
             </li>
 
@@ -298,33 +270,39 @@ export const TodaysQuestion = () => {
               </button>
             </li>
           </ul>
+
           {group?.hostId === currentUser?._id && (
-            <div>
-              <h3 className="text-lg font-bold">
+            <ul className="list bg-base-100 rounded-box shadow-md">
+              <li className="p-4 pb-2 text-xs opacity-60 tracking-wide uppercase">
                 Invite friends to your group
-              </h3>
-              <p className="py-4">
-                Share this link with friends so they can join your group.
-              </p>
-              <div className="join w-full">
-                <input
-                  className="input join-item w-full font-mono text-sm"
-                  value={joinUrl}
-                  readOnly
-                />
-                <button
-                  className="btn btn-primary join-item"
-                  onClick={() => void handleCopyJoinUrl()}
-                >
-                  {copyStatus === "copied" ? "Copied" : "Copy"}
-                </button>
-              </div>
-              {copyStatus === "failed" && (
-                <p className="mt-2 text-sm text-error">
-                  Copy failed. You can select the link and copy it manually.
-                </p>
-              )}
-            </div>
+              </li>
+
+              <li className="list-row items-center">
+                <div className="flex flex-col gap-3">
+                  <p>
+                    Share this link with friends so they can join your group.
+                  </p>
+                  <div className="join w-full">
+                    <input
+                      className="input join-item w-full font-mono text-sm"
+                      value={joinUrl}
+                      readOnly
+                    />
+                    <button
+                      className="btn btn-primary join-item"
+                      onClick={() => void handleCopyJoinUrl()}
+                    >
+                      {copyStatus === "copied" ? "Copied" : "Copy"}
+                    </button>
+                  </div>
+                  {copyStatus === "failed" && (
+                    <p className="mt-2 text-sm text-error">
+                      Copy failed. You can select the link and copy it manually.
+                    </p>
+                  )}
+                </div>
+              </li>
+            </ul>
           )}
         </div>
       </div>

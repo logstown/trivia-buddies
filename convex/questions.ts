@@ -75,8 +75,13 @@ export const addNewGroupQuestion = internalAction({
         );
       } while (alreadyUsed);
 
+      const user = nextCategoryUser
+        ? { id: nextCategoryUser._id, name: nextCategoryUser.name }
+        : undefined;
+
       await ctx.runMutation(internal.questions.addGroupQuestion, {
         groupId: group._id,
+        user,
         type: question.type,
         difficulty: question.difficulty,
         category: question.category,
@@ -97,6 +102,12 @@ export const addNewGroupQuestion = internalAction({
 export const addGroupQuestion = internalMutation({
   args: {
     groupId: v.id("groups"),
+    user: v.optional(
+      v.object({
+        id: v.id("users"),
+        name: v.string(),
+      }),
+    ),
     type: v.union(v.literal("multiple"), v.literal("boolean")),
     difficulty: v.union(
       v.literal("easy"),
@@ -112,6 +123,7 @@ export const addGroupQuestion = internalMutation({
     ctx,
     {
       groupId,
+      user,
       type,
       difficulty,
       category,
@@ -127,6 +139,7 @@ export const addGroupQuestion = internalMutation({
 
     await ctx.db.insert("questions", {
       groupId,
+      user,
       type,
       difficulty,
       category,
@@ -159,9 +172,7 @@ export const getTodaysQuestion = query({
 
     if (questions.length === 0) return null;
 
-    const question = questions[0]; // Assuming the first question is today's question
-
-    return question;
+    return questions[0];
   },
 });
 

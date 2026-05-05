@@ -27,6 +27,12 @@ export default defineSchema({
 
   questions: defineTable({
     groupId: v.id("groups"),
+    user: v.optional(
+      v.object({
+        id: v.id("users"),
+        name: v.string(),
+      }),
+    ),
     type: v.union(v.literal("multiple"), v.literal("boolean")),
     difficulty: v.union(
       v.literal("easy"),
