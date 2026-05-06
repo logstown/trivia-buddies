@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Trivia Buddies">
+  <defs>
+    <linearGradient id="background" x1="10" y1="8" x2="54" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#22c55e" />
+      <stop offset="0.52" stop-color="#0ea5e9" />
+      <stop offset="1" stop-color="#f59e0b" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="2" flood-color="#0f172a" flood-opacity="0.22" />
+    </filter>
+  </defs>
+
+  <rect width="64" height="64" rx="16" fill="url(#background)" />
+
+  <g filter="url(#shadow)">
+    <path
+      d="M16 28c0-8.3 7.3-15 16.4-15C41.5 13 49 19.7 49 28s-7.4 15-16.6 15c-1.6 0-3.1-.2-4.6-.6L18 48l2.7-8.9C17.8 36.3 16 32.4 16 28Z"
+      fill="#fff7ed"
+    />
+    <circle cx="17" cy="44" r="5" fill="#fde68a" stroke="#fff7ed" stroke-width="3" />
+    <circle cx="47" cy="44" r="5" fill="#a7f3d0" stroke="#fff7ed" stroke-width="3" />
+  </g>
+
+  <path
+    d="M32.2 32.8c0-2.1.9-3.4 2.9-4.7 1.6-1.1 2.3-1.9 2.3-3.4 0-2-1.7-3.3-4.4-3.3-2.4 0-4.3 1-6.1 2.8l-3.2-3.6c2.4-2.7 5.6-4.1 9.7-4.1 5.7 0 9.5 3.1 9.5 7.8 0 3.1-1.4 5.1-4.4 7-1.7 1.1-2.2 1.8-2.2 3.4v1.1h-4.1v-3Zm-.7 9.8c0-1.8 1.3-3.1 3.2-3.1s3.2 1.3 3.2 3.1-1.3 3.1-3.2 3.1-3.2-1.3-3.2-3.1Z"
+    fill="#0f172a"
+  />
+</svg>
