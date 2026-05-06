@@ -1,11 +1,12 @@
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { decodeHtmlEntities } from "../utils/decodeHtmlEntities";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar } from "./Avatar";
 import { formatDate } from "date-fns";
 import { PencilIcon } from "lucide-react";
 import YourNextCategory from "./YourNextCategory";
+import ConfettiGenerator from "confetti-js";
 
 export const TodaysQuestion = () => {
   const question = useQuery(api.questions.getTodaysQuestion);
@@ -24,6 +25,19 @@ export const TodaysQuestion = () => {
     "idle",
   );
   const [showEditCategory, setShowEditCategory] = useState(false);
+
+  useEffect(() => {
+    console.log(question);
+    if (
+      questionAnswers?.userAnswer &&
+      questionAnswers.userAnswer === question?.correctAnswer
+    ) {
+      console.log(questionAnswers?.userAnswer, question);
+      const confettiSettings = { target: "my-canvas" };
+      const confetti = new ConfettiGenerator(confettiSettings);
+      confetti.render();
+    }
+  }, [questionAnswers, question]);
 
   if (question === undefined) {
     return (
@@ -243,18 +257,6 @@ export const TodaysQuestion = () => {
         <div className="flex flex-col gap-8">
           <ul className="list bg-base-100 rounded-box shadow-md">
             <li className="p-4 pb-2 text-xs opacity-60 tracking-wide uppercase">
-              Yet to Answer
-            </li>
-
-            {questionAnswers?.answerUsers.hasntAnswered?.map((user, idx) => (
-              <li className="list-row items-center" key={idx}>
-                <Avatar name={user.playerName} imageUrl={user.playerImageUrl} />
-                <div>{user.playerName}</div>
-              </li>
-            ))}
-          </ul>
-          <ul className="list bg-base-100 rounded-box shadow-md">
-            <li className="p-4 pb-2 text-xs opacity-60 tracking-wide uppercase">
               Your next question's category
             </li>
 
@@ -269,6 +271,19 @@ export const TodaysQuestion = () => {
                 <PencilIcon size={13} />
               </button>
             </li>
+          </ul>
+
+          <ul className="list bg-base-100 rounded-box shadow-md">
+            <li className="p-4 pb-2 text-xs opacity-60 tracking-wide uppercase">
+              Yet to Answer
+            </li>
+
+            {questionAnswers?.answerUsers.hasntAnswered?.map((user, idx) => (
+              <li className="list-row items-center" key={idx}>
+                <Avatar name={user.playerName} imageUrl={user.playerImageUrl} />
+                <div>{user.playerName}</div>
+              </li>
+            ))}
           </ul>
 
           {group?.hostId === currentUser?._id && (

@@ -12,6 +12,7 @@ import { HomePage } from "./pages/Home";
 export default function App() {
   return (
     <>
+      <canvas className="absolute" id="my-canvas"></canvas>
       <Navbar />
       <main className="p-8">
         <Unauthenticated>
