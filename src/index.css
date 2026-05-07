@@ -5,3 +5,37 @@
     dark --prefersdark,
     cupcake;
 }
+
+/* Prevent drawer slide animation when resizing viewport across the lg breakpoint */
+/* @media (min-width: 1024px) { */
+.drawer-side {
+  transition: none;
+}
+/* } */
+
+/* @layer components {
+  .btn-gradient {
+    @apply btn text-primary-content;
+
+    border-color: transparent;
+    background-image: linear-gradient(
+      to right bottom,
+      var(--color-neutral),
+      var(--color-accent)
+    );
+    box-shadow:
+      0 4px 6px -1px color-mix(in oklab, var(--color-accent), black 12%),
+      0 2px 4px -1px color-mix(in oklab, var(--color-accent), black 6%);
+  }
+
+  .btn-gradient:hover {
+    background-image: linear-gradient(
+      to right bottom,
+      color-mix(in oklab, var(--color-neutral), black 12%),
+      color-mix(in oklab, var(--color-accent), black 12%)
+    );
+    box-shadow:
+      0 6px 8px -1px color-mix(in oklab, var(--color-accent), black 16%),
+      0 4px 6px -1px color-mix(in oklab, var(--color-accent), black 8%);
+  }
+} */
