@@ -164,15 +164,13 @@ export const getTodaysQuestion = query({
     const groupId = user.groupId;
     if (!groupId) return null;
 
-    const questions = await ctx.db
+    const question = await ctx.db
       .query("questions")
       .withIndex("by_groupId", (q) => q.eq("groupId", groupId))
       .order("desc")
-      .take(1);
+      .first();
 
-    if (questions.length === 0) return null;
-
-    return questions[0];
+    return question;
   },
 });
 

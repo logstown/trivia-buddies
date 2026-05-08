@@ -43,7 +43,7 @@ export default defineSchema({
     question: v.string(),
     correctAnswer: v.string(),
     answers: v.array(v.string()),
-  }).index("by_groupId", ["groupId"]), // Get questions for a group
+  }).index("by_groupId_creationTime", ["groupId"]), // Get questions for a group
 
   playerAnswers: defineTable({
     playerId: v.id("users"),
