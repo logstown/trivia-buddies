@@ -23,6 +23,13 @@ export default defineSchema({
   groups: defineTable({
     name: v.string(),
     hostId: v.id("users"),
+    totalQuestions: v.number(),
+    totalCategoryQuestions: v.record(v.string(), v.number()), // category name -> number of questions in that category
+    totalDifficultyQuestions: v.object({
+      easy: v.number(),
+      medium: v.number(),
+      hard: v.number(),
+    }), // difficulty -> number of questions in that difficulty
   }),
 
   questions: defineTable({
@@ -52,4 +59,54 @@ export default defineSchema({
   })
     .index("playerId", ["playerId"]) // Get questions for a player
     .index("questionId", ["questionId"]), // Get users for a question
+
+  playerStats: defineTable({
+    playerId: v.id("users"),
+    groupId: v.id("groups"),
+
+    answered: v.number(),
+    correct: v.number(),
+
+    points: v.number(),
+    currentParticipationStreak: v.number(),
+    longestParticipationStreak: v.number(),
+    currentCorrectStreak: v.number(),
+    longestCorrectStreak: v.number(),
+
+    lastAnsweredAt: v.optional(v.number()),
+  })
+    .index("by_player", ["playerId"])
+    .index("by_group", ["groupId"]),
+
+  playerCategoryStats: defineTable({
+    playerId: v.id("users"),
+    category: v.string(),
+    groupId: v.id("groups"),
+
+    answered: v.number(),
+    correct: v.number(),
+
+    points: v.number(),
+  })
+    .index("by_player", ["playerId"])
+    .index("by_player_category", ["playerId", "category"])
+    .index("by_group", ["groupId"]), // Get category stats for a group
+
+  playerDifficultyStats: defineTable({
+    playerId: v.id("users"),
+    difficulty: v.union(
+      v.literal("easy"),
+      v.literal("medium"),
+      v.literal("hard"),
+    ),
+    groupId: v.id("groups"),
+
+    answered: v.number(),
+    correct: v.number(),
+
+    points: v.number(),
+  })
+    .index("by_player", ["playerId"])
+    .index("by_player_difficulty", ["playerId", "difficulty"])
+    .index("by_group", ["groupId"]), // Get difficulty stats for a group
 });

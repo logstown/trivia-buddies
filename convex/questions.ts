@@ -14,7 +14,7 @@ export const getGroupQuestions = internalQuery({
   handler: async (ctx, { groupId }) => {
     const questions = await ctx.db
       .query("questions")
-      .withIndex("by_groupId", (q) => q.eq("groupId", groupId))
+      .withIndex("by_groupId_creationTime", (q) => q.eq("groupId", groupId))
       .collect();
     return questions;
   },
@@ -28,8 +28,15 @@ export const addQuestionUponCreateGroup = internalAction({
     const question = await ctx.runAction(internal.opentdb.fetchQuestion, {
       categoryId: undefined,
     });
-    await ctx.runMutation(internal.questions.addGroupQuestion, {
+
+    const group = await ctx.runQuery(internal.group.getFullGroupById, {
       groupId,
+    });
+
+    if (!group) throw new Error("Group not found");
+
+    await ctx.runMutation(internal.questions.addGroupQuestion, {
+      group,
       type: question.type,
       difficulty: question.difficulty,
       category: question.category,
@@ -43,7 +50,7 @@ export const addQuestionUponCreateGroup = internalAction({
 export const addNewGroupQuestion = internalAction({
   args: {},
   handler: async (ctx) => {
-    const allGroups = await ctx.runQuery(internal.group.getReadyGroups);
+    const allGroups = await ctx.runQuery(internal.group.getAllGroups);
 
     for (const group of allGroups) {
       const groupQuestions = await ctx.runQuery(
@@ -80,7 +87,7 @@ export const addNewGroupQuestion = internalAction({
         : undefined;
 
       await ctx.runMutation(internal.questions.addGroupQuestion, {
-        groupId: group._id,
+        group,
         user,
         type: question.type,
         difficulty: question.difficulty,
@@ -101,7 +108,18 @@ export const addNewGroupQuestion = internalAction({
 
 export const addGroupQuestion = internalMutation({
   args: {
-    groupId: v.id("groups"),
+    group: v.object({
+      _id: v.id("groups"),
+      name: v.string(),
+      hostId: v.id("users"),
+      totalQuestions: v.number(),
+      totalCategoryQuestions: v.record(v.string(), v.number()), // category name -> number of questions in that category
+      totalDifficultyQuestions: v.object({
+        easy: v.number(),
+        medium: v.number(),
+        hard: v.number(),
+      }),
+    }),
     user: v.optional(
       v.object({
         id: v.id("users"),
@@ -122,7 +140,7 @@ export const addGroupQuestion = internalMutation({
   handler: async (
     ctx,
     {
-      groupId,
+      group,
       user,
       type,
       difficulty,
@@ -138,7 +156,7 @@ export const addGroupQuestion = internalMutation({
         : ["True", "False"];
 
     await ctx.db.insert("questions", {
-      groupId,
+      groupId: group._id,
       user,
       type,
       difficulty,
@@ -146,6 +164,18 @@ export const addGroupQuestion = internalMutation({
       question,
       correctAnswer,
       answers,
+    });
+
+    await ctx.db.patch("groups", group._id, {
+      totalQuestions: group.totalQuestions + 1,
+      totalCategoryQuestions: {
+        ...group.totalCategoryQuestions,
+        [category]: (group.totalCategoryQuestions[category] ?? 0) + 1,
+      },
+      totalDifficultyQuestions: {
+        ...group.totalDifficultyQuestions,
+        [difficulty]: (group.totalDifficultyQuestions[difficulty] ?? 0) + 1,
+      },
     });
   },
 });
@@ -166,7 +196,7 @@ export const getTodaysQuestion = query({
 
     const question = await ctx.db
       .query("questions")
-      .withIndex("by_groupId", (q) => q.eq("groupId", groupId))
+      .withIndex("by_groupId_creationTime", (q) => q.eq("groupId", groupId))
       .order("desc")
       .first();
 
@@ -247,5 +277,89 @@ export const submitAnswer = mutation({
       questionId: todaysQuestion._id,
       answer,
     });
+
+    const [stats, categoryStats, difficultyStats] = await Promise.all([
+      ctx.db
+        .query("playerStats")
+        .withIndex("by_player", (q) => q.eq("playerId", user._id))
+        .unique(),
+      ctx.db
+        .query("playerCategoryStats")
+        .withIndex("by_player", (q) => q.eq("playerId", user._id))
+        .unique(),
+      ctx.db
+        .query("playerDifficultyStats")
+        .withIndex("by_player", (q) => q.eq("playerId", user._id))
+        .unique(),
+    ]);
+
+    const isCorrect = answer === todaysQuestion.correctAnswer;
+    const correct = isCorrect ? 1 : 0;
+    const points = isCorrect ? 10 : 0;
+
+    if (stats) {
+      await ctx.db.patch("playerStats", stats?._id, {
+        answered: stats.answered + 1,
+        correct: stats.correct + correct,
+        points: stats.points + points,
+        currentParticipationStreak: stats.currentParticipationStreak + 1,
+        longestParticipationStreak: Math.max(
+          stats.longestParticipationStreak,
+          stats.currentParticipationStreak + 1,
+        ),
+        currentCorrectStreak: isCorrect ? stats.currentCorrectStreak + 1 : 0,
+        longestCorrectStreak: isCorrect
+          ? Math.max(stats.longestCorrectStreak, stats.currentCorrectStreak + 1)
+          : stats.longestCorrectStreak,
+        lastAnsweredAt: Date.now(),
+      });
+    } else {
+      await ctx.db.insert("playerStats", {
+        playerId: user._id,
+        groupId: todaysQuestion.groupId,
+        answered: 1,
+        correct,
+        points,
+        currentParticipationStreak: 1,
+        longestParticipationStreak: 1,
+        currentCorrectStreak: correct,
+        longestCorrectStreak: correct,
+        lastAnsweredAt: Date.now(),
+      });
+    }
+
+    if (categoryStats) {
+      await ctx.db.patch("playerCategoryStats", categoryStats._id, {
+        answered: categoryStats.answered + 1,
+        correct: categoryStats.correct + correct,
+        points: categoryStats.points + points,
+      });
+    } else {
+      await ctx.db.insert("playerCategoryStats", {
+        playerId: user._id,
+        category: todaysQuestion.category,
+        groupId: todaysQuestion.groupId,
+        answered: 1,
+        correct,
+        points,
+      });
+    }
+
+    if (difficultyStats) {
+      await ctx.db.patch("playerDifficultyStats", difficultyStats._id, {
+        answered: difficultyStats.answered + 1,
+        correct: difficultyStats.correct + correct,
+        points: difficultyStats.points + points,
+      });
+    } else {
+      await ctx.db.insert("playerDifficultyStats", {
+        playerId: user._id,
+        difficulty: todaysQuestion.difficulty,
+        groupId: todaysQuestion.groupId,
+        answered: 1,
+        correct,
+        points,
+      });
+    }
   },
 });

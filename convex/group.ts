@@ -26,6 +26,16 @@ export const getGroupById = query({
   },
 });
 
+export const getFullGroupById = internalQuery({
+  args: {
+    groupId: v.id("groups"),
+  },
+  handler: async (ctx, { groupId }) => {
+    const group = await ctx.db.get("groups", groupId);
+    return group;
+  },
+});
+
 export const getGroupByUser = query({
   args: {},
   handler: async (ctx) => {
@@ -62,7 +72,7 @@ export const getGroupByUser = query({
   },
 });
 
-export const getReadyGroups = internalQuery({
+export const getAllGroups = internalQuery({
   args: {},
   handler: async (ctx) => {
     const groups = await ctx.db.query("groups").collect();
@@ -89,6 +99,13 @@ export const createGroup = mutation({
     const groupId = await ctx.db.insert("groups", {
       name,
       hostId: user._id,
+      totalQuestions: 0,
+      totalCategoryQuestions: {},
+      totalDifficultyQuestions: {
+        easy: 0,
+        medium: 0,
+        hard: 0,
+      },
     });
 
     await ctx.db.patch("users", user._id, {
