@@ -110,6 +110,7 @@ export const addGroupQuestion = internalMutation({
   args: {
     group: v.object({
       _id: v.id("groups"),
+      _creationTime: v.number(),
       name: v.string(),
       hostId: v.id("users"),
       totalQuestions: v.number(),
