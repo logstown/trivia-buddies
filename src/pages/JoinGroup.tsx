@@ -1,12 +1,14 @@
 import { useQuery, useMutation } from "convex/react";
-import { useParams, useNavigate, Navigate } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
 export default function JoinGroup() {
   const { groupId } = useParams();
   const navigate = useNavigate();
-  if (!groupId) return <Navigate to="/" replace />;
+  // if (!groupId) return <Navigate to="/" replace />;
+
+  if (!groupId) return null;
 
   const group = useQuery(api.group.getGroupById, {
     groupId: groupId as Id<"groups">,
