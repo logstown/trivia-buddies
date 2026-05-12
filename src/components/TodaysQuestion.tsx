@@ -27,12 +27,10 @@ export const TodaysQuestion = () => {
   const [showEditCategory, setShowEditCategory] = useState(false);
 
   useEffect(() => {
-    console.log(question);
     if (
       questionAnswers?.userAnswer &&
       questionAnswers.userAnswer === question?.correctAnswer
     ) {
-      console.log(questionAnswers?.userAnswer, question);
       const confettiSettings = { target: "my-canvas" };
       const confetti = new ConfettiGenerator(confettiSettings);
       confetti.render();
@@ -212,7 +210,8 @@ export const TodaysQuestion = () => {
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between gap-3 sm:justify-end">
+                {/* <div className="flex items-center justify-between gap-3 sm:justify-end"> */}
+                {isAnswered && (
                   <div className="flex min-h-8 flex-wrap justify-end gap-1">
                     {questionAnswers?.answerUsers[answer]?.map((user, idx) => (
                       <div
@@ -227,7 +226,8 @@ export const TodaysQuestion = () => {
                       </div>
                     ))}
                   </div>
-                </div>
+                )}
+                {/* </div> */}
               </label>
             ))}
           </section>
@@ -275,7 +275,9 @@ export const TodaysQuestion = () => {
 
           <ul className="list bg-base-100 rounded-box shadow-md">
             <li className="p-4 pb-2 text-xs opacity-60 tracking-wide uppercase">
-              Yet to Answer
+              {!!questionAnswers?.answerUsers.hasntAnswered?.length
+                ? "Yet to answer"
+                : "All players have answered!"}
             </li>
 
             {questionAnswers?.answerUsers.hasntAnswered?.map((user, idx) => (

@@ -296,13 +296,11 @@ export const submitAnswer = mutation({
 
     const isCorrect = answer === todaysQuestion.correctAnswer;
     const correct = isCorrect ? 1 : 0;
-    const points = isCorrect ? 10 : 0;
 
     if (stats) {
       await ctx.db.patch("playerStats", stats?._id, {
         answered: stats.answered + 1,
         correct: stats.correct + correct,
-        points: stats.points + points,
         currentParticipationStreak: stats.currentParticipationStreak + 1,
         longestParticipationStreak: Math.max(
           stats.longestParticipationStreak,
@@ -320,7 +318,6 @@ export const submitAnswer = mutation({
         groupId: todaysQuestion.groupId,
         answered: 1,
         correct,
-        points,
         currentParticipationStreak: 1,
         longestParticipationStreak: 1,
         currentCorrectStreak: correct,
@@ -333,7 +330,6 @@ export const submitAnswer = mutation({
       await ctx.db.patch("playerCategoryStats", categoryStats._id, {
         answered: categoryStats.answered + 1,
         correct: categoryStats.correct + correct,
-        points: categoryStats.points + points,
       });
     } else {
       await ctx.db.insert("playerCategoryStats", {
@@ -342,7 +338,6 @@ export const submitAnswer = mutation({
         groupId: todaysQuestion.groupId,
         answered: 1,
         correct,
-        points,
       });
     }
 
@@ -350,7 +345,6 @@ export const submitAnswer = mutation({
       await ctx.db.patch("playerDifficultyStats", difficultyStats._id, {
         answered: difficultyStats.answered + 1,
         correct: difficultyStats.correct + correct,
-        points: difficultyStats.points + points,
       });
     } else {
       await ctx.db.insert("playerDifficultyStats", {
@@ -359,7 +353,6 @@ export const submitAnswer = mutation({
         groupId: todaysQuestion.groupId,
         answered: 1,
         correct,
-        points,
       });
     }
   },

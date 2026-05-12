@@ -67,7 +67,6 @@ export default defineSchema({
     answered: v.number(),
     correct: v.number(),
 
-    points: v.number(),
     currentParticipationStreak: v.number(),
     longestParticipationStreak: v.number(),
     currentCorrectStreak: v.number(),
@@ -85,8 +84,6 @@ export default defineSchema({
 
     answered: v.number(),
     correct: v.number(),
-
-    points: v.number(),
   })
     .index("by_player", ["playerId"])
     .index("by_player_category", ["playerId", "category"])
@@ -103,8 +100,6 @@ export default defineSchema({
 
     answered: v.number(),
     correct: v.number(),
-
-    points: v.number(),
   })
     .index("by_player", ["playerId"])
     .index("by_player_difficulty", ["playerId", "difficulty"])
