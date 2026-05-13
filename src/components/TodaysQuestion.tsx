@@ -248,13 +248,13 @@ export const TodaysQuestion = () => {
           </footer>
         </div>
       </div>
-      <div className="drawer-side justify-items-start">
+      <div className="drawer-side">
         <label
           htmlFor="my-drawer-3"
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8 bg-base-100 min-h-full lg:min-h-0 p-4">
           <ul className="list bg-base-100 rounded-box shadow-md">
             <li className="p-4 pb-2 text-xs opacity-60 tracking-wide uppercase">
               Your next question's category
