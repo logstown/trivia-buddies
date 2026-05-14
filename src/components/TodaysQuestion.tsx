@@ -4,7 +4,7 @@ import { decodeHtmlEntities } from "../utils/decodeHtmlEntities";
 import { useState } from "react";
 import { Avatar } from "./Avatar";
 import { formatDate } from "date-fns";
-import { PencilIcon } from "lucide-react";
+import { InfoIcon, PencilIcon } from "lucide-react";
 import YourNextCategory from "./YourNextCategory";
 
 export const TodaysQuestion = () => {
@@ -258,21 +258,28 @@ export const TodaysQuestion = () => {
                 </li>
               ))}
             </ul>
-            <div className="flex gap-2 lg:gap-4 items-center">
-              <span className=" lg:text-xl tracking-tight text-sm lg:tracking-normal text-base-content/50 font-medium uppercase">
-                Your next question's category:
-              </span>
-              <div className="flex gap-1 lg:gap-2 items-center">
-                <div className="badge badge-lg badge-primary badge-soft ">
-                  {currentUser?.nextCategory.name ?? "Random"}
+            <div>
+              <div className="flex gap-2 lg:gap-4 items-center">
+                <span className=" lg:text-xl tracking-tight text-sm lg:tracking-normal text-base-content/50 font-medium uppercase">
+                  Your next question's category:
+                </span>
+                <div className="flex gap-1 lg:gap-2 items-center">
+                  <div className="badge badge-lg badge-primary badge-soft ">
+                    {currentUser?.nextCategory.name ?? "Random"}
+                  </div>
+                  <button
+                    className="btn btn-ghost btn-xs btn-square"
+                    onClick={() => setShowEditCategory(true)}
+                  >
+                    <PencilIcon size={13} />
+                  </button>
                 </div>
-                <button
-                  className="btn btn-ghost btn-xs btn-square"
-                  onClick={() => setShowEditCategory(true)}
-                >
-                  <PencilIcon size={13} />
-                </button>
               </div>
+              <p className="mt-2 text-sm text-base-content/70">
+                <InfoIcon className="inline mb-0.5 mr-1" size={14} />
+                Each day, a new player is selected and the question will come
+                from that player's chosen category.
+              </p>
             </div>
 
             {group?.hostId === currentUser?._id && (
