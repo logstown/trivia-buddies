@@ -51,10 +51,12 @@ export default function YourNextCategory({
   return (
     <dialog className="modal" open>
       <div className="modal-box">
-        <h3 className="text-lg font-bold">Category for your next question</h3>
-        <p className="py-4">
+        <h3 className="text-lg font-bold mb-5">
+          Choose the category for your next question
+        </h3>
+        {/* <p className="py-4">
           Share this link with friends so they can join your group.
-        </p>
+        </p> */}
         <select
           className="select select-bordered w-full max-w-xs"
           value={selectedCategory ?? ""}

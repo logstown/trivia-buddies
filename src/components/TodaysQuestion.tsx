@@ -26,16 +26,16 @@ export const TodaysQuestion = () => {
   );
   const [showEditCategory, setShowEditCategory] = useState(false);
 
-  useEffect(() => {
-    if (
-      questionAnswers?.userAnswer &&
-      questionAnswers.userAnswer === question?.correctAnswer
-    ) {
-      const confettiSettings = { target: "my-canvas" };
-      const confetti = new ConfettiGenerator(confettiSettings);
-      confetti.render();
-    }
-  }, [questionAnswers, question]);
+  // useEffect(() => {
+  //   if (
+  //     questionAnswers?.userAnswer &&
+  //     questionAnswers.userAnswer === question?.correctAnswer
+  //   ) {
+  //     const confettiSettings = { target: "my-canvas" };
+  //     const confetti = new ConfettiGenerator(confettiSettings);
+  //     confetti.render();
+  //   }
+  // }, [questionAnswers, question]);
 
   if (question === undefined) {
     return (
@@ -138,191 +138,183 @@ export const TodaysQuestion = () => {
   };
 
   return (
-    <div className="drawer lg:drawer-open drawer-end">
-      <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content">
-        {/* Page content here */}
-        <label htmlFor="my-drawer-3" className="btn drawer-button lg:hidden">
-          Open drawer
-        </label>
-        <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-          <header className="flex flex-col gap-2">
-            <p className="text-sm font-semibold uppercase tracking-wide text-base-content/50">
-              {formatDate(new Date(), "MMMM do, yyyy")}
-            </p>
-            <div className="flex flex-wrap items-center gap-4">
-              <h1 className="text-3xl font-bold tracking-normal text-base-content">
-                {title}
-              </h1>
-              {isAnswered && (
-                <div
-                  className={`badge badge-lg font-bold tracking-wide ${resultTone}`}
-                >
-                  {resultIsCorrect ? "CORRECT" : "INCORRECT"}
-                </div>
-              )}
-            </div>
-          </header>
+    <div className="flex flex-col gap-12 mx-auto w-full max-w-3xl">
+      <div className="flex flex-col gap-6 border border-base-300 rounded-box lg:p-6 shadow-lg">
+        <header className="flex flex-col gap-2">
+          <h1 className="text-4xl font-semibold">{group?.name}</h1>
+          <p className="text-sm font-semibold uppercase tracking-wide text-base-content/50">
+            {formatDate(new Date(), "MMMM do, yyyy")}
+          </p>
+          <h1 className="text-xl font-bold tracking-normal text-base-content">
+            {title}
+          </h1>
+        </header>
 
-          <section className="rounded-box border border-base-300 bg-base-100 p-5 shadow-sm sm:p-7">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="badge badge-neutral badge-soft max-w-full truncate">
-                {question.category}
+        <section className="rounded-box shadow-inner bg-base-200/70 border border-base-200 p-5 sm:p-7">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="badge badge-neutral badge-soft max-w-full truncate">
+              {question.category}
+            </span>
+            {isAnswered && (
+              <span className={`badge badge-soft capitalize ${badgeColor}`}>
+                {question.difficulty}
               </span>
-              {isAnswered && (
-                <span className={`badge badge-soft capitalize ${badgeColor}`}>
-                  {question.difficulty}
+            )}
+          </div>
+
+          <p className="mt-4 text-2xl font-semibold leading-snug text-base-content sm:text-3xl">
+            {decodeHtmlEntities(question.question)}
+          </p>
+        </section>
+
+        <section className="flex flex-col gap-3" aria-label="Answer choices">
+          {question.answers.map((answer, index) => (
+            <label
+              key={index}
+              className={`flex flex-col gap-3 rounded-box border p-4 transition sm:flex-row sm:items-center sm:justify-between ${answerTone(answer)} ${
+                isAnswered ? "cursor-default" : ""
+              }`}
+            >
+              <div className="flex min-w-0 items-center gap-3">
+                <input
+                  disabled={isAnswered}
+                  type="radio"
+                  className="radio radio-primary shrink-0"
+                  name="answer"
+                  value={answer}
+                  checked={displayedAnswer === answer}
+                  onChange={handleChange}
+                />
+                <span
+                  className={`min-w-0 text-base leading-snug text-base-content ${
+                    isAnswered && answer === question.correctAnswer
+                      ? "font-bold"
+                      : "font-medium"
+                  }`}
+                >
+                  {decodeHtmlEntities(answer)}
                 </span>
+              </div>
+
+              {/* <div className="flex items-center justify-between gap-3 sm:justify-end"> */}
+              {isAnswered && (
+                <div className="flex min-h-8 flex-wrap justify-end gap-1">
+                  {questionAnswers?.answerUsers[answer]?.map((user, idx) => (
+                    <div
+                      className="tooltip"
+                      data-tip={user.playerName}
+                      key={idx}
+                    >
+                      <Avatar
+                        name={user.playerName}
+                        imageUrl={user.playerImageUrl}
+                      />
+                    </div>
+                  ))}
+                </div>
               )}
+              {/* </div> */}
+            </label>
+          ))}
+        </section>
+
+        <footer className="flex justify-end ">
+          {!isAnswered && (
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                if (!displayedAnswer) return;
+                void submitAnswer({ answer: displayedAnswer });
+              }}
+              disabled={!displayedAnswer}
+            >
+              Submit Answer
+            </button>
+          )}
+        </footer>
+      </div>
+      {isAnswered && (
+        <>
+          <div className="flex justify-center">
+            <div
+              className={`badge badge-xl text-3xl p-6 font-bold tracking-wide ${resultTone}`}
+            >
+              {resultIsCorrect ? "CORRECT" : "INCORRECT"}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-12 mt-12">
+            <ul className="list bg-base-100 rounded-box border border-base-300 shadow-md">
+              <li className="p-4 pb-2 uppercase text-base-content/50">
+                {!!questionAnswers?.answerUsers.hasntAnswered?.length
+                  ? "Yet to answer"
+                  : "All players have answered!"}
+              </li>
+
+              {questionAnswers?.answerUsers.hasntAnswered?.map((user, idx) => (
+                <li className="list-row items-center" key={idx}>
+                  <Avatar
+                    name={user.playerName}
+                    imageUrl={user.playerImageUrl}
+                  />
+                  <div>{user.playerName}</div>
+                </li>
+              ))}
+            </ul>
+            <div className="flex gap-4 items-center">
+              <span className="text-xl font-semibold">
+                Your next question's category is
+              </span>
+              <div className="flex gap-2 items-center">
+                <div className="badge badge-lg badge-secondary badge-soft ">
+                  {currentUser?.nextCategory.name ?? "Random"}
+                </div>
+                <button
+                  className="btn btn-ghost btn-xs btn-square"
+                  onClick={() => setShowEditCategory(true)}
+                >
+                  <PencilIcon size={13} />
+                </button>
+              </div>
             </div>
 
-            <p className="mt-4 text-2xl font-semibold leading-snug text-base-content sm:text-3xl">
-              {decodeHtmlEntities(question.question)}
-            </p>
-          </section>
+            {group?.hostId === currentUser?._id && (
+              <ul className="list bg-base-100 rounded-box shadow-md">
+                <li className="p-4 pb-2 text-xs opacity-60 tracking-wide uppercase">
+                  Invite friends to your group
+                </li>
 
-          <section className="flex flex-col gap-3" aria-label="Answer choices">
-            {question.answers.map((answer, index) => (
-              <label
-                key={index}
-                className={`flex flex-col gap-3 rounded-box border p-4 transition sm:flex-row sm:items-center sm:justify-between ${answerTone(answer)} ${
-                  isAnswered ? "cursor-default" : ""
-                }`}
-              >
-                <div className="flex min-w-0 items-center gap-3">
-                  <input
-                    disabled={isAnswered}
-                    type="radio"
-                    className="radio radio-primary shrink-0"
-                    name="answer"
-                    value={answer}
-                    checked={displayedAnswer === answer}
-                    onChange={handleChange}
-                  />
-                  <span
-                    className={`min-w-0 text-base leading-snug text-base-content ${
-                      isAnswered && answer === question.correctAnswer
-                        ? "font-bold"
-                        : "font-medium"
-                    }`}
-                  >
-                    {decodeHtmlEntities(answer)}
-                  </span>
-                </div>
-
-                {/* <div className="flex items-center justify-between gap-3 sm:justify-end"> */}
-                {isAnswered && (
-                  <div className="flex min-h-8 flex-wrap justify-end gap-1">
-                    {questionAnswers?.answerUsers[answer]?.map((user, idx) => (
-                      <div
-                        className="tooltip"
-                        data-tip={user.playerName}
-                        key={idx}
-                      >
-                        <Avatar
-                          name={user.playerName}
-                          imageUrl={user.playerImageUrl}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {/* </div> */}
-              </label>
-            ))}
-          </section>
-
-          <footer className="flex justify-end ">
-            {!isAnswered && (
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  if (!displayedAnswer) return;
-                  void submitAnswer({ answer: displayedAnswer });
-                }}
-                disabled={!displayedAnswer}
-              >
-                Submit Answer
-              </button>
-            )}
-          </footer>
-        </div>
-      </div>
-      <div className="drawer-side">
-        <label
-          htmlFor="my-drawer-3"
-          aria-label="close sidebar"
-          className="drawer-overlay"
-        ></label>
-        <div className="flex flex-col gap-8 bg-base-100 min-h-full lg:min-h-0 p-4">
-          <ul className="list bg-base-100 rounded-box shadow-md">
-            <li className="p-4 pb-2 text-xs opacity-60 tracking-wide uppercase">
-              Your next question's category
-            </li>
-
-            <li className="list-row items-center">
-              <div className="badge badge-lg badge-secondary badge-soft ">
-                {currentUser?.nextCategory.name ?? "Random"}
-              </div>
-              <button
-                className="btn btn-ghost btn-xs btn-square"
-                onClick={() => setShowEditCategory(true)}
-              >
-                <PencilIcon size={13} />
-              </button>
-            </li>
-          </ul>
-
-          <ul className="list bg-base-100 rounded-box shadow-md">
-            <li className="p-4 pb-2 text-xs opacity-60 tracking-wide uppercase">
-              {!!questionAnswers?.answerUsers.hasntAnswered?.length
-                ? "Yet to answer"
-                : "All players have answered!"}
-            </li>
-
-            {questionAnswers?.answerUsers.hasntAnswered?.map((user, idx) => (
-              <li className="list-row items-center" key={idx}>
-                <Avatar name={user.playerName} imageUrl={user.playerImageUrl} />
-                <div>{user.playerName}</div>
-              </li>
-            ))}
-          </ul>
-
-          {group?.hostId === currentUser?._id && (
-            <ul className="list bg-base-100 rounded-box shadow-md">
-              <li className="p-4 pb-2 text-xs opacity-60 tracking-wide uppercase">
-                Invite friends to your group
-              </li>
-
-              <li className="list-row items-center">
-                <div className="flex flex-col gap-3">
-                  <p>
-                    Share this link with friends so they can join your group.
-                  </p>
-                  <div className="join w-full">
-                    <input
-                      className="input join-item w-full font-mono text-sm"
-                      value={joinUrl}
-                      readOnly
-                    />
-                    <button
-                      className="btn btn-soft join-item"
-                      onClick={() => void handleCopyJoinUrl()}
-                    >
-                      {copyStatus === "copied" ? "Copied" : "Copy"}
-                    </button>
-                  </div>
-                  {copyStatus === "failed" && (
-                    <p className="mt-2 text-sm text-error">
-                      Copy failed. You can select the link and copy it manually.
+                <li className="list-row items-center">
+                  <div className="flex flex-col gap-3">
+                    <p>
+                      Share this link with friends so they can join your group.
                     </p>
-                  )}
-                </div>
-              </li>
-            </ul>
-          )}
-        </div>
-      </div>
+                    <div className="join w-full">
+                      <input
+                        className="input join-item w-full font-mono text-sm"
+                        value={joinUrl}
+                        readOnly
+                      />
+                      <button
+                        className="btn btn-soft join-item"
+                        onClick={() => void handleCopyJoinUrl()}
+                      >
+                        {copyStatus === "copied" ? "Copied" : "Copy"}
+                      </button>
+                    </div>
+                    {copyStatus === "failed" && (
+                      <p className="mt-2 text-sm text-error">
+                        Copy failed. You can select the link and copy it
+                        manually.
+                      </p>
+                    )}
+                  </div>
+                </li>
+              </ul>
+            )}
+          </div>
+        </>
+      )}
       {showEditCategory && (
         <YourNextCategory handleCloseModal={() => setShowEditCategory(false)} />
       )}
