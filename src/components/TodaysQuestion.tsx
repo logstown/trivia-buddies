@@ -1,12 +1,11 @@
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { decodeHtmlEntities } from "../utils/decodeHtmlEntities";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Avatar } from "./Avatar";
 import { formatDate } from "date-fns";
 import { PencilIcon } from "lucide-react";
 import YourNextCategory from "./YourNextCategory";
-import ConfettiGenerator from "confetti-js";
 
 export const TodaysQuestion = () => {
   const question = useQuery(api.questions.getTodaysQuestion);
@@ -141,13 +140,11 @@ export const TodaysQuestion = () => {
     <div className="flex flex-col gap-12 mx-auto w-full max-w-3xl">
       <div className="flex flex-col gap-6 border border-base-300 rounded-box lg:p-6 shadow-lg">
         <header className="flex flex-col gap-2">
-          <h1 className="text-4xl font-semibold">{group?.name}</h1>
-          <p className="text-sm font-semibold uppercase tracking-wide text-base-content/50">
+          <h1 className="text-3xl font-bold text-primary">{group?.name}</h1>
+          <p className="text-sm font-medium uppercase tracking-wide text-base-content/60">
             {formatDate(new Date(), "MMMM do, yyyy")}
           </p>
-          <h1 className="text-xl font-bold tracking-normal text-base-content">
-            {title}
-          </h1>
+          <h2 className="text-xl font-semibold text-base-content">{title}</h2>
         </header>
 
         <section className="rounded-box shadow-inner bg-base-200/70 border border-base-200 p-5 sm:p-7">
