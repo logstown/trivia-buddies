@@ -263,7 +263,7 @@ export const TodaysQuestion = () => {
                 Your next question's category:
               </span>
               <div className="flex gap-1 lg:gap-2 items-center">
-                <div className="badge badge-lg badge-secondary badge-soft ">
+                <div className="badge badge-lg badge-primary badge-soft ">
                   {currentUser?.nextCategory.name ?? "Random"}
                 </div>
                 <button

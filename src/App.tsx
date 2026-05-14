@@ -20,7 +20,6 @@ export default function App() {
           <Routes>
             <Route path="/join-group/:groupId" element={<JoinGroup />} />
             <Route path="/" element={<HomePage />} />
-            {/* <Route path="/your-next-category" element={<YourNextCategory />} /> */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
