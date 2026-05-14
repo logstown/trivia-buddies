@@ -138,7 +138,7 @@ export const TodaysQuestion = () => {
 
   return (
     <div className="flex flex-col gap-12 mx-auto w-full max-w-3xl">
-      <div className="flex flex-col gap-6 border border-base-300 rounded-box lg:p-6 shadow-lg">
+      <div className="flex flex-col gap-6 border border-base-300 rounded-box p-3 lg:p-6 shadow-lg">
         <header className="flex flex-col gap-2">
           <h1 className="text-3xl font-bold text-primary">{group?.name}</h1>
           <p className="text-sm font-medium uppercase tracking-wide text-base-content/60">

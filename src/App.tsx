@@ -15,7 +15,7 @@ export default function App() {
       <canvas className="absolute" id="my-canvas"></canvas>
       <ProtectedRoute>
         <Navbar />
-        <main className="p-8">
+        <main className="p-4 lg:p-8">
           <UserSync />
           <Routes>
             <Route path="/join-group/:groupId" element={<JoinGroup />} />
