@@ -259,9 +259,9 @@ export const TodaysQuestion = () => {
               ))}
             </ul>
             <div>
-              <div className="flex gap-2 lg:gap-4 items-center">
-                <span className=" lg:text-xl tracking-tight text-sm lg:tracking-normal text-base-content/50 font-medium uppercase">
-                  Your next question's category:
+              <div className="flex gap-2 lg:gap-4 items-baseline">
+                <span className=" lg:text-2xl tracking-tight text-sm lg:tracking-normal text-base-content/50 font-medium uppercase">
+                  Your next category:
                 </span>
                 <div className="flex gap-1 lg:gap-2 items-center">
                   <div className="badge badge-lg badge-primary badge-soft ">
