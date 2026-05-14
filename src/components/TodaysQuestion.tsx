@@ -168,7 +168,7 @@ export const TodaysQuestion = () => {
           {question.answers.map((answer, index) => (
             <label
               key={index}
-              className={`flex flex-col gap-3 rounded-box border p-4 transition sm:flex-row sm:items-center sm:justify-between ${answerTone(answer)} ${
+              className={`flex flex-col gap-1 lg:gap-3 rounded-box border p-4 transition sm:flex-row sm:items-center sm:justify-between ${answerTone(answer)} ${
                 isAnswered ? "cursor-default" : ""
               }`}
             >
@@ -258,11 +258,11 @@ export const TodaysQuestion = () => {
                 </li>
               ))}
             </ul>
-            <div className="flex gap-4 items-center">
-              <span className="text-xl font-semibold">
-                Your next question's category is
+            <div className="flex gap-2 lg:gap-4 items-center">
+              <span className=" lg:text-xl tracking-tight text-sm lg:tracking-normal text-base-content/50 font-medium uppercase">
+                Your next question's category:
               </span>
-              <div className="flex gap-2 items-center">
+              <div className="flex gap-1 lg:gap-2 items-center">
                 <div className="badge badge-lg badge-secondary badge-soft ">
                   {currentUser?.nextCategory.name ?? "Random"}
                 </div>
