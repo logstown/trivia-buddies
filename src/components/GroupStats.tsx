@@ -1,7 +1,7 @@
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
-import { chain, groupBy, sortBy } from "lodash";
+import { chain } from "lodash";
 import { Stat } from "./Stat";
 
 export function GroupStats({
@@ -30,6 +30,8 @@ export function GroupStats({
   //     const sortedStats = sortBy(stats, stat => stat.answered).reverse();
   //     return sortedStats[0];
   // }
+
+  console.log(totalQuestions);
 
   return (
     <div className="stats stats-vertical md:stats-horizontal shadow overflow-visible">
