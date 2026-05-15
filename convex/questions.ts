@@ -34,7 +34,7 @@ export const getGroupQuestions = internalQuery({
   handler: async (ctx, { groupId }) => {
     const questions = await ctx.db
       .query("questions")
-      .withIndex("by_groupId_creationTime", (q) => q.eq("groupId", groupId))
+      .withIndex("by_groupId", (q) => q.eq("groupId", groupId))
       .collect();
     return questions;
   },
@@ -181,7 +181,7 @@ export const addGroupQuestion = internalMutation({
 
     const questionId = await ctx.db.insert("questions", {
       groupId: group._id,
-      stringDate: format(new Date(), "M-D-yyyy"),
+      stringDate: format(new Date(), "M-d-yyyy"),
       user,
       type,
       difficulty,
@@ -287,9 +287,12 @@ export const getTodaysQuestion = query({
 
     const question = await ctx.db
       .query("questions")
-      .withIndex("by_groupId_creationTime", (q) => q.eq("groupId", groupId))
-      .order("desc")
-      .first();
+      .withIndex("by_groupId_stringDate", (q) =>
+        q
+          .eq("groupId", groupId)
+          .eq("stringDate", format(new Date(), "M-d-yyyy")),
+      )
+      .unique();
 
     return question;
   },
