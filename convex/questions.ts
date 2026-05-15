@@ -26,6 +26,8 @@ type QuestionReminderContext = {
   skippedMissingEmail: number;
 };
 
+const MILLISECONDS_IN_A_DAY = 86400000;
+
 export const getGroupQuestions = internalQuery({
   args: { groupId: v.id("groups") },
   handler: async (ctx, { groupId }) => {
@@ -199,11 +201,9 @@ export const addGroupQuestion = internalMutation({
       },
     });
 
-    await ctx.scheduler.runAfter(
-      0,
-      internal.users.sendQuestionReminderEmails,
-      { questionId },
-    );
+    await ctx.scheduler.runAfter(0, internal.users.sendQuestionReminderEmails, {
+      questionId,
+    });
 
     return questionId;
   },
@@ -386,13 +386,19 @@ export const submitAnswer = mutation({
     const correct = isCorrect ? 1 : 0;
 
     if (stats) {
+      const answeredYesterday =
+        Date.now() - (stats.lastAnsweredAt ?? 0) < MILLISECONDS_IN_A_DAY;
+      const newParticipationStreak = answeredYesterday
+        ? stats.currentParticipationStreak + 1
+        : 1;
+
       await ctx.db.patch("playerStats", stats?._id, {
         answered: stats.answered + 1,
         correct: stats.correct + correct,
-        currentParticipationStreak: stats.currentParticipationStreak + 1,
+        currentParticipationStreak: newParticipationStreak,
         longestParticipationStreak: Math.max(
           stats.longestParticipationStreak,
-          stats.currentParticipationStreak + 1,
+          newParticipationStreak,
         ),
         currentCorrectStreak: isCorrect ? stats.currentCorrectStreak + 1 : 0,
         longestCorrectStreak: isCorrect
