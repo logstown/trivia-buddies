@@ -1,5 +1,97 @@
 import { v } from "convex/values";
-import { internalMutation, mutation, query } from "./_generated/server";
+import {
+  internalAction,
+  internalMutation,
+  internalQuery,
+  mutation,
+  query,
+} from "./_generated/server";
+import { internal } from "./_generated/api";
+import type { Id } from "./_generated/dataModel";
+
+type ReminderRecipient = {
+  userId: Id<"users">;
+  name: string;
+  email: string;
+};
+
+type QuestionReminderContext = {
+  groupName: string;
+  category: string;
+  difficulty: "easy" | "medium" | "hard";
+  recipients: ReminderRecipient[];
+  skippedAlreadyAnswered: number;
+  skippedMissingEmail: number;
+};
+
+type ReminderSendResult =
+  | { ok: true }
+  | { ok: false; email: string; status: number; message: string };
+
+type ReminderSendSummary = {
+  sent: number;
+  failed: number;
+  skipped: number;
+};
+
+const htmlEscapeCharacters: Record<string, string> = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;",
+};
+
+const escapeHtml = (value: string) =>
+  value.replace(/[&<>"']/g, (character) => htmlEscapeCharacters[character]);
+
+const buildReminderEmail = ({
+  appUrl,
+  category,
+  difficulty,
+  groupName,
+  name,
+}: {
+  appUrl?: string;
+  category: string;
+  difficulty: "easy" | "medium" | "hard";
+  groupName: string;
+  name: string;
+}) => {
+  const greetingName = name.trim() || "there";
+  const subject = `Today's ${groupName} trivia question is ready`;
+  const textLines = [
+    `Hi ${greetingName},`,
+    "",
+    `Today's ${groupName} trivia question is ready.`,
+    `Category: ${category}`,
+    `Difficulty: ${difficulty}`,
+    "",
+    appUrl
+      ? `Answer it here: ${appUrl}`
+      : "Open Trivia Buddies to answer today's question.",
+  ];
+
+  const callToAction = appUrl
+    ? `<p><a href="${escapeHtml(appUrl)}" style="display:inline-block;background:#111827;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:6px;font-weight:600;">Answer today's question</a></p>`
+    : "<p>Open Trivia Buddies to answer today's question.</p>";
+
+  return {
+    subject,
+    text: textLines.join("\n"),
+    html: `
+      <div style="font-family:Arial,sans-serif;line-height:1.5;color:#111827;">
+        <p>Hi ${escapeHtml(greetingName)},</p>
+        <p>Today's <strong>${escapeHtml(groupName)}</strong> trivia question is ready.</p>
+        <p>
+          <strong>Category:</strong> ${escapeHtml(category)}<br />
+          <strong>Difficulty:</strong> ${escapeHtml(difficulty)}
+        </p>
+        ${callToAction}
+      </div>
+    `,
+  };
+};
 
 export const upsertCurrentUser = mutation({
   args: {},
@@ -7,18 +99,21 @@ export const upsertCurrentUser = mutation({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return null;
+    const email = identity.email;
     const existing = await ctx.db
       .query("users")
       .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.tokenIdentifier))
       .unique();
     if (existing) {
       await ctx.db.patch("users", existing._id, {
-        name: identity.name,
+        name: identity.name || existing.name,
         imageUrl: identity.pictureUrl,
+        ...(email ? { email } : {}),
       });
     } else {
       await ctx.db.insert("users", {
         clerkId: identity.tokenIdentifier,
+        ...(email ? { email } : {}),
         name: identity.name || "Anonymous",
         imageUrl: identity.pictureUrl,
         numQuestionsPicked: 0,
@@ -60,7 +155,104 @@ export const getUsersInGroup = query({
       .query("users")
       .withIndex("by_groupId", (q) => q.eq("groupId", groupId))
       .collect();
-    return users;
+    return users.map((user) => ({
+      _id: user._id,
+      name: user.name,
+      imageUrl: user.imageUrl,
+    }));
+  },
+});
+
+export const getUsersInGroupForQuestionPicking = internalQuery({
+  args: {
+    groupId: v.id("groups"),
+  },
+  handler: async (ctx, { groupId }) => {
+    return await ctx.db
+      .query("users")
+      .withIndex("by_groupId", (q) => q.eq("groupId", groupId))
+      .collect();
+  },
+});
+
+export const sendQuestionReminderEmails = internalAction({
+  args: {
+    questionId: v.id("questions"),
+  },
+  handler: async (ctx, { questionId }): Promise<ReminderSendSummary> => {
+    const reminderContext: QuestionReminderContext | null = await ctx.runQuery(
+      internal.questions.getQuestionReminderContext,
+      { questionId },
+    );
+
+    if (!reminderContext) {
+      console.warn(`Skipping reminders for missing question ${questionId}`);
+      return { sent: 0, failed: 0, skipped: 0 };
+    }
+
+    const resendApiKey = process.env.RESEND_API_KEY;
+    const from = process.env.RESEND_FROM_EMAIL;
+    const appUrl = process.env.APP_URL;
+
+    if (!resendApiKey || !from) {
+      throw new Error(
+        "Missing RESEND_API_KEY or RESEND_FROM_EMAIL Convex environment variables",
+      );
+    }
+
+    const results: ReminderSendResult[] = await Promise.all(
+      reminderContext.recipients.map(async (recipient) => {
+        const email = buildReminderEmail({
+          appUrl,
+          category: reminderContext.category,
+          difficulty: reminderContext.difficulty,
+          groupName: reminderContext.groupName,
+          name: recipient.name,
+        });
+
+        const response = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${resendApiKey}`,
+            "Content-Type": "application/json",
+            "Idempotency-Key": `question-${questionId}-user-${recipient.userId}`,
+          },
+          body: JSON.stringify({
+            from,
+            to: recipient.email,
+            subject: email.subject,
+            html: email.html,
+            text: email.text,
+            tags: [
+              { name: "kind", value: "question_reminder" },
+              { name: "app", value: "trivia_buddies" },
+            ],
+          }),
+        });
+
+        if (response.ok) return { ok: true };
+
+        return {
+          ok: false,
+          email: recipient.email,
+          status: response.status,
+          message: await response.text(),
+        };
+      }),
+    );
+
+    const failures = results.filter((result) => !result.ok);
+    if (failures.length > 0) {
+      console.error("Failed to send some question reminders", failures);
+    }
+
+    return {
+      sent: results.length - failures.length,
+      failed: failures.length,
+      skipped:
+        reminderContext.skippedAlreadyAnswered +
+        reminderContext.skippedMissingEmail,
+    };
   },
 });
 

@@ -6,8 +6,25 @@ import {
   query,
 } from "./_generated/server";
 import { api, internal } from "./_generated/api";
+import type { Doc, Id } from "./_generated/dataModel";
 import { v } from "convex/values";
 import { find, groupBy, minBy } from "lodash";
+
+type ReminderRecipient = {
+  userId: Id<"users">;
+  name: string;
+  email: string;
+};
+
+type QuestionReminderContext = {
+  questionId: Id<"questions">;
+  groupName: string;
+  category: string;
+  difficulty: "easy" | "medium" | "hard";
+  recipients: ReminderRecipient[];
+  skippedAlreadyAnswered: number;
+  skippedMissingEmail: number;
+};
 
 export const getGroupQuestions = internalQuery({
   args: { groupId: v.id("groups") },
@@ -53,14 +70,17 @@ export const addNewGroupQuestion = internalAction({
     const allGroups = await ctx.runQuery(internal.group.getAllGroups);
 
     for (const group of allGroups) {
-      const groupQuestions = await ctx.runQuery(
+      const groupQuestions: Doc<"questions">[] = await ctx.runQuery(
         internal.questions.getGroupQuestions,
         { groupId: group._id },
       );
 
-      const groupUsers = await ctx.runQuery(api.users.getUsersInGroup, {
-        groupId: group._id,
-      });
+      const groupUsers: Doc<"users">[] = await ctx.runQuery(
+        internal.users.getUsersInGroupForQuestionPicking,
+        {
+          groupId: group._id,
+        },
+      );
       const nextCategoryUser = minBy(
         groupUsers,
         (user) => user.numQuestionsPicked ?? 0,
@@ -156,7 +176,7 @@ export const addGroupQuestion = internalMutation({
         ? [...incorrectAnswers, correctAnswer].sort(() => Math.random() - 0.5)
         : ["True", "False"];
 
-    await ctx.db.insert("questions", {
+    const questionId = await ctx.db.insert("questions", {
       groupId: group._id,
       user,
       type,
@@ -178,6 +198,74 @@ export const addGroupQuestion = internalMutation({
         [difficulty]: (group.totalDifficultyQuestions[difficulty] ?? 0) + 1,
       },
     });
+
+    await ctx.scheduler.runAfter(
+      0,
+      internal.users.sendQuestionReminderEmails,
+      { questionId },
+    );
+
+    return questionId;
+  },
+});
+
+export const getQuestionReminderContext = internalQuery({
+  args: {
+    questionId: v.id("questions"),
+  },
+  handler: async (
+    ctx,
+    { questionId },
+  ): Promise<QuestionReminderContext | null> => {
+    const question = await ctx.db.get("questions", questionId);
+    if (!question) return null;
+
+    const group = await ctx.db.get("groups", question.groupId);
+    if (!group) return null;
+
+    const [users, answers] = await Promise.all([
+      ctx.db
+        .query("users")
+        .withIndex("by_groupId", (q) => q.eq("groupId", question.groupId))
+        .collect(),
+      ctx.db
+        .query("playerAnswers")
+        .withIndex("questionId", (q) => q.eq("questionId", questionId))
+        .collect(),
+    ]);
+
+    const answeredUserIds = new Set(answers.map((answer) => answer.playerId));
+    const recipients: ReminderRecipient[] = [];
+    let skippedAlreadyAnswered = 0;
+    let skippedMissingEmail = 0;
+
+    for (const user of users) {
+      if (answeredUserIds.has(user._id)) {
+        skippedAlreadyAnswered += 1;
+        continue;
+      }
+
+      if (!user.email) {
+        skippedMissingEmail += 1;
+        continue;
+      }
+
+      recipients.push({
+        userId: user._id,
+        name: user.name,
+        email: user.email,
+      });
+    }
+
+    return {
+      questionId,
+      groupName: group.name,
+      category: question.category,
+      difficulty: question.difficulty,
+      recipients,
+      skippedAlreadyAnswered,
+      skippedMissingEmail,
+    };
   },
 });
 
@@ -227,7 +315,7 @@ export const getQuestionAnswers = query({
 
     const groupUsers = await ctx.db
       .query("users")
-      .withIndex("by_groupId", (q) => q.eq("groupId", user.groupId!))
+      .withIndex("by_groupId", (q) => q.eq("groupId", user.groupId))
       .collect();
 
     const usersWithAnswer = groupUsers
