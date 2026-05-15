@@ -3,9 +3,15 @@ import { internal } from "./_generated/api";
 
 const crons = cronJobs();
 
+// Set different times for prod vs. dev
+const isProd = process.env.NODE_ENV === "production";
+const dailyTime = isProd
+  ? { hourUTC: 8, minuteUTC: 0 }
+  : { hourUTC: 9, minuteUTC: 0 };
+
 crons.daily(
   "get daily question",
-  { hourUTC: 8, minuteUTC: 0 }, // 3am Eastern Time
+  dailyTime,
   internal.questions.addNewGroupQuestion,
   {},
 );
