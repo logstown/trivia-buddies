@@ -6,6 +6,7 @@ import { Avatar } from "./Avatar";
 import { formatDate } from "date-fns";
 import { InfoIcon, PencilIcon } from "lucide-react";
 import YourNextCategory from "./YourNextCategory";
+import { GroupStats } from "./GroupStats";
 
 export const TodaysQuestion = () => {
   const question = useQuery(api.questions.getTodaysQuestion);
@@ -315,6 +316,14 @@ export const TodaysQuestion = () => {
                   </div>
                 </li>
               </ul>
+            )}
+            {group && (
+              <div className="flex justify-center mt-12">
+                <GroupStats
+                  groupId={group._id}
+                  totalQuestions={group.totalQuestions}
+                />
+              </div>
             )}
           </div>
         </>

@@ -10,22 +10,22 @@ export const Avatar: React.FC<{
     .toUpperCase()
     .slice(0, 2);
 
-  if (!imageUrl) {
-    return (
-      <div
-        className={`avatar avatar-placeholder ${isLarge ? "w-16 h-16" : "w-8 h-8"}`}
-      >
-        <div className="bg-neutral text-neutral-content w-full h-full rounded-full flex items-center justify-center">
-          <span className={isLarge ? "text-lg" : "text-xs"}>{initials}</span>
-        </div>
-      </div>
-    );
-  }
+  const sizeClasses = isLarge ? "w-16 h-16" : "w-8 h-8";
 
   return (
-    <div className="avatar">
-      <div className={`w-8 rounded-full ${isLarge ? "w-16 h-16" : "w-8 h-8"}`}>
-        <img src={imageUrl} />
+    <div className="tooltip inline-block hover:z-20" data-tip={name}>
+      <div className={`avatar ${!imageUrl ? "avatar-placeholder" : ""}`}>
+        <div className={`${sizeClasses} rounded-full`}>
+          {imageUrl ? (
+            <img src={imageUrl} alt={name} />
+          ) : (
+            <div className="bg-neutral text-neutral-content w-full h-full rounded-full flex items-center justify-center">
+              <span className={isLarge ? "text-lg" : "text-xs"}>
+                {initials}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

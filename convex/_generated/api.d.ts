@@ -12,6 +12,7 @@ import type * as crons from "../crons.js";
 import type * as group from "../group.js";
 import type * as opentdb from "../opentdb.js";
 import type * as questions from "../questions.js";
+import type * as stats from "../stats.js";
 import type * as users from "../users.js";
 
 import type {
@@ -25,6 +26,7 @@ declare const fullApi: ApiFromModules<{
   group: typeof group;
   opentdb: typeof opentdb;
   questions: typeof questions;
+  stats: typeof stats;
   users: typeof users;
 }>;
 
