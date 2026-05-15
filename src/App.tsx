@@ -8,6 +8,7 @@ import { Navbar } from "./components/Navbar";
 import JoinGroup from "./pages/JoinGroup";
 import { HomePage } from "./pages/Home";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { TodaysQuestion } from "./components/TodaysQuestion";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <main className="p-4 lg:p-8 pb-8">
           <UserSync />
           <Routes>
+            <Route path="question/:questionDate" element={<TodaysQuestion />} />
             <Route path="/join-group/:groupId" element={<JoinGroup />} />
             <Route path="/" element={<HomePage />} />
             <Route path="*" element={<Navigate to="/" replace />} />

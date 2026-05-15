@@ -3,13 +3,21 @@ import { api } from "../../convex/_generated/api";
 import { decodeHtmlEntities } from "../utils/decodeHtmlEntities";
 import { useState } from "react";
 import { Avatar } from "./Avatar";
-import { formatDate } from "date-fns";
+import { format, formatDate, isValid, parse } from "date-fns";
 import { InfoIcon, PencilIcon } from "lucide-react";
 import YourNextCategory from "./YourNextCategory";
 import { GroupStats } from "./GroupStats";
+import { Navigate, useParams } from "react-router";
 
 export const TodaysQuestion = () => {
-  const question = useQuery(api.questions.getTodaysQuestion);
+  const { questionDate } = useParams();
+
+  if (questionDate && !isValidMDYDate(questionDate))
+    return <Navigate to="/" replace />;
+
+  const question = useQuery(api.questions.getQuestionByDate, {
+    stringDate: questionDate ?? formatDate(new Date(), "M-d-yyyy"),
+  });
   const questionAnswers = useQuery(
     api.questions.getQuestionAnswers,
     question ? { questionId: question._id } : "skip",
@@ -334,3 +342,9 @@ export const TodaysQuestion = () => {
     </div>
   );
 };
+
+function isValidMDYDate(input: string): boolean {
+  const parsed = parse(input, "M-d-yyyy", new Date());
+
+  return isValid(parsed) && format(parsed, "M-d-yyyy") === input;
+}

@@ -40,7 +40,7 @@ export function GroupStats({
   console.log(totalQuestions);
 
   return (
-    <div className="stats stats-vertical md:stats-horizontal shadow overflow-visible">
+    <div className="stats stats-vertical lg:stats-horizontal shadow overflow-visible">
       {playerAccuracies.map((p) => (
         <Stat
           key={p._id}

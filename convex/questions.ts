@@ -271,9 +271,11 @@ export const getQuestionReminderContext = internalQuery({
   },
 });
 
-export const getTodaysQuestion = query({
-  args: {},
-  handler: async (ctx) => {
+export const getQuestionByDate = query({
+  args: {
+    stringDate: v.string(),
+  },
+  handler: async (ctx, { stringDate }) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return null;
     const user = await ctx.db
@@ -288,9 +290,7 @@ export const getTodaysQuestion = query({
     const question = await ctx.db
       .query("questions")
       .withIndex("by_groupId_stringDate", (q) =>
-        q
-          .eq("groupId", groupId)
-          .eq("stringDate", format(new Date(), "M-d-yyyy")),
+        q.eq("groupId", groupId).eq("stringDate", stringDate),
       )
       .unique();
 
@@ -360,7 +360,9 @@ export const submitAnswer = mutation({
 
     if (!user) return null;
 
-    const todaysQuestion = await ctx.runQuery(api.questions.getTodaysQuestion);
+    const todaysQuestion = await ctx.runQuery(api.questions.getQuestionByDate, {
+      stringDate: format(new Date(), "M-d-yyyy"),
+    });
 
     if (!todaysQuestion) {
       throw new Error("No question available to answer");
