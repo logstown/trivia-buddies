@@ -18,6 +18,9 @@ export const getPlayerStatsByGroup = query({
           .withIndex("by_player", (q) => q.eq("playerId", user._id))
           .unique();
 
+        if (!stats) {
+          throw new Error("Can't find stats for this player");
+        }
         return {
           ...stats,
           playerId: user._id,
