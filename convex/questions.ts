@@ -9,6 +9,7 @@ import { api, internal } from "./_generated/api";
 import type { Doc, Id } from "./_generated/dataModel";
 import { v } from "convex/values";
 import { find, groupBy, minBy } from "lodash";
+import { format } from "date-fns";
 
 type ReminderRecipient = {
   userId: Id<"users">;
@@ -180,6 +181,7 @@ export const addGroupQuestion = internalMutation({
 
     const questionId = await ctx.db.insert("questions", {
       groupId: group._id,
+      stringDate: format(new Date(), "M-D-yyyy"),
       user,
       type,
       difficulty,

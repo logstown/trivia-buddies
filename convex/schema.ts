@@ -35,6 +35,7 @@ export default defineSchema({
 
   questions: defineTable({
     groupId: v.id("groups"),
+    stringDate: v.optional(v.string()),
     user: v.optional(
       v.object({
         id: v.id("users"),
