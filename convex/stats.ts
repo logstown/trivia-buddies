@@ -21,12 +21,15 @@ export const getPlayerStatsByGroup = query({
         if (!stats) {
           throw new Error("Can't find stats for this player");
         }
+        const accuracy = stats
+          ? (stats.correct ?? 0) / (stats.answered ?? 1)
+          : 0;
         return {
           ...stats,
           playerId: user._id,
           playerName: user.name,
           playerAvatarUrl: user.imageUrl,
-          accuracy: stats ? (stats.correct ?? 0) / (stats.answered ?? 1) : 0,
+          accuracy: Math.round(accuracy * 100) / 100, // Round to 2 decimal places
         };
       }),
     );
