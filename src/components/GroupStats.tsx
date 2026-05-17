@@ -34,7 +34,7 @@ export function GroupStats({
   return (
     <div>
       <h3 className="text-xl font-semibold mb-2 flex gap-2">
-        Leaderboard (points)
+        Leaderboard
         <span
           className="tooltip"
           data-tip={`Points are calculated as 2 points per question answered and an additional 10 points for each correct answer.`}
@@ -54,8 +54,8 @@ export function GroupStats({
               },
             ]}
             statValue={p.points.toString()}
-            statTitle={`${p.correct} / ${p.answered} correct`}
-            statDesc={p.accuracy * 100 + "%"}
+            statTitle="Points"
+            statDesc={`${p.correct} / ${p.answered} correct`}
           />
         ))}
       </div>
