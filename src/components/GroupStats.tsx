@@ -1,7 +1,7 @@
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
-import { chain, sortBy } from "lodash";
+import { chain } from "lodash";
 import { Stat } from "./Stat";
 import { InfoIcon } from "lucide-react";
 
