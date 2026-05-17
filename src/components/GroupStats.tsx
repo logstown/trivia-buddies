@@ -1,8 +1,9 @@
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
-import { sortBy } from "lodash";
+import { chain, sortBy } from "lodash";
 import { Stat } from "./Stat";
+import { InfoIcon } from "lucide-react";
 
 export function GroupStats({
   groupId,
@@ -13,49 +14,51 @@ export function GroupStats({
 }) {
   const playerStats = useQuery(api.stats.getPlayerStatsByGroup, { groupId });
 
-  //   const playersWithSameAccuracy = chain(playerStats ?? [])
-  //     .groupBy("accuracy")
-  //     .map((players, accuracy) => ({
-  //       accuracy: parseFloat(accuracy),
-  //       players: players.map((stat) => ({
-  //         id: stat.playerId,
-  //         name: stat.playerName,
-  //         avatarUrl: stat.playerAvatarUrl,
-  //       })),
-  //     }))
-  //     .sortBy("accuracy")
-  //     .reverse()
-  //     .value();
-  // .map((stats, accuracy) => {
-  //     const sortedStats = sortBy(stats, stat => stat.answered).reverse();
-  //     return sortedStats[0];
-  // }
-
   if (!playerStats) {
     return null;
   }
 
-  const playerAccuracies = sortBy(playerStats, "accuracy").reverse();
+  //   const playerAccuracies = sortBy(playerStats, "accuracy").reverse();
+
+  const playerPoints = chain(playerStats)
+    .map((p) => ({
+      ...p,
+      points: p.answered * 2 + p.correct * 10,
+    }))
+    .sortBy("points")
+    .value()
+    .reverse();
 
   console.log(totalQuestions);
 
   return (
-    <div className="stats stats-vertical lg:stats-horizontal shadow overflow-visible">
-      {playerAccuracies.map((p) => (
-        <Stat
-          key={p._id}
-          users={[
-            {
-              id: p.playerId,
-              name: p.playerName,
-              avatarUrl: p.playerAvatarUrl,
-            },
-          ]}
-          statValue={p.accuracy * 100 + "%"}
-          statTitle={`${p.correct} / ${p.answered} correct`}
-          //   statDesc={`${stat.correct} / ${stat.answered} correct`}
-        />
-      ))}
+    <div>
+      <h3 className="text-xl font-semibold mb-2 flex gap-2">
+        Leaderboard (points)
+        <span
+          className="tooltip"
+          data-tip={`Points are calculated as 2 points per question answered and an additional 10 points for each correct answer.`}
+        >
+          <InfoIcon className="inline-block ml-1 w-4 h-4 text-base-content/70" />
+        </span>
+      </h3>
+      <div className="stats stats-vertical lg:stats-horizontal shadow overflow-visible">
+        {playerPoints.map((p) => (
+          <Stat
+            key={p._id}
+            users={[
+              {
+                id: p.playerId,
+                name: p.playerName,
+                avatarUrl: p.playerAvatarUrl,
+              },
+            ]}
+            statValue={p.points.toString()}
+            statTitle={`${p.correct} / ${p.answered} correct`}
+            statDesc={p.accuracy * 100 + "%"}
+          />
+        ))}
+      </div>
     </div>
   );
 }
