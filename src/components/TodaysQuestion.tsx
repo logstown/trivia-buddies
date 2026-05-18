@@ -158,7 +158,7 @@ export const TodaysQuestion = () => {
 
         <section className="rounded-box shadow-inner bg-base-200/70 border border-base-200 p-5 sm:p-7">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="badge badge-neutral badge-soft max-w-full truncate">
+            <span className="badge badge-soft max-w-full truncate">
               {decodeHtmlEntities(question.category)}
             </span>
             {isAnswered && (
