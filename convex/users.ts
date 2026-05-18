@@ -34,6 +34,11 @@ type ReminderSendSummary = {
   skipped: number;
 };
 
+const RESEND_EMAILS_PER_SECOND = 4;
+const RESEND_BATCH_DELAY_MS = 1000;
+const RESEND_MAX_SEND_ATTEMPTS = 3;
+const RESEND_DEFAULT_RETRY_DELAY_MS = 1000;
+
 const htmlEscapeCharacters: Record<string, string> = {
   "&": "&amp;",
   "<": "&lt;",
@@ -44,6 +49,25 @@ const htmlEscapeCharacters: Record<string, string> = {
 
 const escapeHtml = (value: string) =>
   value.replace(/[&<>"']/g, (character) => htmlEscapeCharacters[character]);
+
+const sleep = (milliseconds: number) =>
+  new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+const retryDelayFromHeader = (retryAfter: string | null) => {
+  if (!retryAfter) return RESEND_DEFAULT_RETRY_DELAY_MS;
+
+  const seconds = Number(retryAfter);
+  if (Number.isFinite(seconds)) {
+    return Math.max(seconds * 1000, RESEND_DEFAULT_RETRY_DELAY_MS);
+  }
+
+  const retryAt = Date.parse(retryAfter);
+  if (Number.isFinite(retryAt)) {
+    return Math.max(retryAt - Date.now(), RESEND_DEFAULT_RETRY_DELAY_MS);
+  }
+
+  return RESEND_DEFAULT_RETRY_DELAY_MS;
+};
 
 const buildReminderEmail = ({
   appUrl,
@@ -90,6 +114,63 @@ const buildReminderEmail = ({
         ${callToAction}
       </div>
     `,
+  };
+};
+
+const sendReminderEmail = async ({
+  email,
+  from,
+  questionId,
+  recipient,
+  resendApiKey,
+}: {
+  email: ReturnType<typeof buildReminderEmail>;
+  from: string;
+  questionId: Id<"questions">;
+  recipient: ReminderRecipient;
+  resendApiKey: string;
+}): Promise<ReminderSendResult> => {
+  for (let attempt = 1; attempt <= RESEND_MAX_SEND_ATTEMPTS; attempt += 1) {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${resendApiKey}`,
+        "Content-Type": "application/json",
+        "Idempotency-Key": `question-${questionId}-user-${recipient.userId}`,
+      },
+      body: JSON.stringify({
+        from,
+        to: recipient.email,
+        subject: email.subject,
+        html: email.html,
+        text: email.text,
+        tags: [
+          { name: "kind", value: "question_reminder" },
+          { name: "app", value: "trivia_buddies" },
+        ],
+      }),
+    });
+
+    if (response.ok) return { ok: true };
+
+    if (response.status === 429 && attempt < RESEND_MAX_SEND_ATTEMPTS) {
+      await sleep(retryDelayFromHeader(response.headers.get("Retry-After")));
+      continue;
+    }
+
+    return {
+      ok: false,
+      email: recipient.email,
+      status: response.status,
+      message: await response.text(),
+    };
+  }
+
+  return {
+    ok: false,
+    email: recipient.email,
+    status: 429,
+    message: "Resend request was rate limited after retry attempts",
   };
 };
 
@@ -200,46 +281,43 @@ export const sendQuestionReminderEmails = internalAction({
       );
     }
 
-    const results: ReminderSendResult[] = await Promise.all(
-      reminderContext.recipients.map(async (recipient) => {
-        const email = buildReminderEmail({
-          appUrl,
-          category: reminderContext.category,
-          difficulty: reminderContext.difficulty,
-          groupName: reminderContext.groupName,
-          name: recipient.name,
-        });
+    const results: ReminderSendResult[] = [];
 
-        const response = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${resendApiKey}`,
-            "Content-Type": "application/json",
-            "Idempotency-Key": `question-${questionId}-user-${recipient.userId}`,
-          },
-          body: JSON.stringify({
+    for (
+      let index = 0;
+      index < reminderContext.recipients.length;
+      index += RESEND_EMAILS_PER_SECOND
+    ) {
+      const recipients = reminderContext.recipients.slice(
+        index,
+        index + RESEND_EMAILS_PER_SECOND,
+      );
+      const batchResults = await Promise.all(
+        recipients.map(async (recipient) => {
+          const email = buildReminderEmail({
+            appUrl,
+            category: reminderContext.category,
+            difficulty: reminderContext.difficulty,
+            groupName: reminderContext.groupName,
+            name: recipient.name,
+          });
+
+          return await sendReminderEmail({
             from,
-            to: recipient.email,
-            subject: email.subject,
-            html: email.html,
-            text: email.text,
-            tags: [
-              { name: "kind", value: "question_reminder" },
-              { name: "app", value: "trivia_buddies" },
-            ],
-          }),
-        });
+            email,
+            questionId,
+            recipient,
+            resendApiKey,
+          });
+        }),
+      );
 
-        if (response.ok) return { ok: true };
+      results.push(...batchResults);
 
-        return {
-          ok: false,
-          email: recipient.email,
-          status: response.status,
-          message: await response.text(),
-        };
-      }),
-    );
+      if (index + recipients.length < reminderContext.recipients.length) {
+        await sleep(RESEND_BATCH_DELAY_MS);
+      }
+    }
 
     const failures = results.filter((result) => !result.ok);
     if (failures.length > 0) {
