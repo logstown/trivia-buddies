@@ -8,7 +8,6 @@ export const Navbar = () => {
   const [theme, setTheme] = useState(
     () => window.localStorage.getItem("theme") ?? "light",
   );
-  const [showClose, setShowClose] = useState(false);
 
   const formatThemeLabel = (value: string) =>
     value.charAt(0).toUpperCase() + value.slice(1);
@@ -58,12 +57,10 @@ export const Navbar = () => {
 
   const handleThemeChange = (themeName: string) => {
     setTheme(themeName);
-    setShowClose(true);
   };
 
   const closeThemeDropdown = useCallback(() => {
     themeDropdownRef.current?.removeAttribute("open");
-    setShowClose(false);
   }, []);
 
   useEffect(() => {
