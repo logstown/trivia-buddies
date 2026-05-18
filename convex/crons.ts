@@ -9,9 +9,9 @@ const dailyTime = isProd
   ? { hourUTC: 8, minuteUTC: 0 }
   : { hourUTC: 9, minuteUTC: 0 };
 
-crons.daily(
+crons.cron(
   "get daily question",
-  dailyTime,
+  `${dailyTime.minuteUTC} ${dailyTime.hourUTC} * * *`,
   internal.questions.addNewGroupQuestion,
   {},
 );

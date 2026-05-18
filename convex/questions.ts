@@ -6,8 +6,9 @@ import {
   query,
 } from "./_generated/server";
 import { api, internal } from "./_generated/api";
-import type { Doc, Id } from "./_generated/dataModel";
+import type { Id } from "./_generated/dataModel";
 import { v } from "convex/values";
+import { paginationOptsValidator } from "convex/server";
 import { find, groupBy, minBy } from "lodash";
 import { format } from "date-fns";
 
@@ -28,6 +29,15 @@ type QuestionReminderContext = {
 };
 
 const MILLISECONDS_IN_A_DAY = 86400000;
+const DAILY_QUESTION_GROUP_BATCH_SIZE = 25;
+const DAILY_QUESTION_GROUP_STAGGER_MS = 6000;
+const MAX_EXISTING_QUESTIONS_TO_CHECK = 500;
+const MAX_GROUP_USERS_FOR_QUESTION_PICKING = 200;
+const MAX_QUESTION_FETCH_ATTEMPTS = 5;
+const QUESTION_FETCH_RETRY_DELAY_MS = 6000;
+
+const sleep = (milliseconds: number) =>
+  new Promise((resolve) => setTimeout(resolve, milliseconds));
 
 export const getGroupQuestions = internalQuery({
   args: { groupId: v.id("groups") },
@@ -68,64 +78,147 @@ export const addQuestionUponCreateGroup = internalAction({
 });
 
 export const addNewGroupQuestion = internalAction({
-  args: {},
-  handler: async (ctx) => {
-    const allGroups = await ctx.runQuery(internal.group.getAllGroups);
+  args: {
+    cursor: v.optional(v.string()),
+  },
+  handler: async (ctx, { cursor }) => {
+    const groupPage: Awaited<
+      ReturnType<typeof ctx.runQuery<typeof internal.questions.listDailyGroups>>
+    > = await ctx.runQuery(internal.questions.listDailyGroups, {
+      paginationOpts: {
+        numItems: DAILY_QUESTION_GROUP_BATCH_SIZE,
+        cursor: cursor ?? null,
+      },
+    });
 
-    for (const group of allGroups) {
-      const groupQuestions: Doc<"questions">[] = await ctx.runQuery(
-        internal.questions.getGroupQuestions,
+    for (const [index, group] of groupPage.page.entries()) {
+      await ctx.scheduler.runAfter(
+        index * DAILY_QUESTION_GROUP_STAGGER_MS,
+        internal.questions.addNewQuestionForGroup,
         { groupId: group._id },
       );
+    }
 
-      const groupUsers: Doc<"users">[] = await ctx.runQuery(
-        internal.users.getUsersInGroupForQuestionPicking,
-        {
-          groupId: group._id,
-        },
+    if (!groupPage.isDone) {
+      await ctx.scheduler.runAfter(
+        groupPage.page.length * DAILY_QUESTION_GROUP_STAGGER_MS,
+        internal.questions.addNewGroupQuestion,
+        { cursor: groupPage.continueCursor },
       );
-      const nextCategoryUser = minBy(
-        groupUsers,
-        (user) => user.numQuestionsPicked ?? 0,
-      );
+    }
+  },
+});
 
-      let question: Awaited<
-        ReturnType<typeof ctx.runAction<typeof internal.opentdb.fetchQuestion>>
-      >;
+export const listDailyGroups = internalQuery({
+  args: {
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx, { paginationOpts }) => {
+    const groupPage = await ctx.db.query("groups").paginate(paginationOpts);
 
-      let alreadyUsed: boolean;
-      do {
-        await new Promise((resolve) => setTimeout(resolve, 6000)); // Avoid hammering the API in case of many duplicates
-        question = await ctx.runAction(internal.opentdb.fetchQuestion, {
-          categoryId: nextCategoryUser?.nextCategory.id,
-        });
+    return {
+      ...groupPage,
+      page: groupPage.page.map((group) => ({ _id: group._id })),
+    };
+  },
+});
 
-        alreadyUsed = groupQuestions.some(
-          (q) => q.question === question.question,
-        );
-      } while (alreadyUsed);
+export const getGroupDailyQuestionContext = internalQuery({
+  args: {
+    groupId: v.id("groups"),
+  },
+  handler: async (ctx, { groupId }) => {
+    const group = await ctx.db.get("groups", groupId);
+    if (!group) return null;
 
-      const user = nextCategoryUser
-        ? { id: nextCategoryUser._id, name: nextCategoryUser.name }
-        : undefined;
+    const [questions, users] = await Promise.all([
+      ctx.db
+        .query("questions")
+        .withIndex("by_groupId", (q) => q.eq("groupId", groupId))
+        .order("desc")
+        .take(MAX_EXISTING_QUESTIONS_TO_CHECK),
+      ctx.db
+        .query("users")
+        .withIndex("by_groupId", (q) => q.eq("groupId", groupId))
+        .take(MAX_GROUP_USERS_FOR_QUESTION_PICKING),
+    ]);
 
-      await ctx.runMutation(internal.questions.addGroupQuestion, {
-        group,
-        user,
-        type: question.type,
-        difficulty: question.difficulty,
-        category: question.category,
-        question: question.question,
-        correctAnswer: question.correct_answer,
-        incorrectAnswers: question.incorrect_answers,
+    return {
+      group,
+      previousQuestionText: questions.map((question) => question.question),
+      users,
+    };
+  },
+});
+
+export const addNewQuestionForGroup = internalAction({
+  args: {
+    groupId: v.id("groups"),
+  },
+  handler: async (ctx, { groupId }) => {
+    const questionContext: Awaited<
+      ReturnType<
+        typeof ctx.runQuery<typeof internal.questions.getGroupDailyQuestionContext>
+      >
+    > = await ctx.runQuery(internal.questions.getGroupDailyQuestionContext, {
+      groupId,
+    });
+
+    if (!questionContext) {
+      console.warn(`Skipping daily question for missing group ${groupId}`);
+      return null;
+    }
+
+    const nextCategoryUser = minBy(
+      questionContext.users,
+      (user) => user.numQuestionsPicked ?? 0,
+    );
+    const previousQuestionText = new Set(questionContext.previousQuestionText);
+
+    let question: Awaited<
+      ReturnType<typeof ctx.runAction<typeof internal.opentdb.fetchQuestion>>
+    > | null = null;
+
+    for (let attempt = 0; attempt < MAX_QUESTION_FETCH_ATTEMPTS; attempt += 1) {
+      if (attempt > 0) {
+        await sleep(QUESTION_FETCH_RETRY_DELAY_MS);
+      }
+
+      const candidate = await ctx.runAction(internal.opentdb.fetchQuestion, {
+        categoryId:
+          attempt === MAX_QUESTION_FETCH_ATTEMPTS - 1
+            ? undefined
+            : nextCategoryUser?.nextCategory.id,
       });
 
-      if (nextCategoryUser) {
-        await ctx.runMutation(internal.users.incrementNumQuestionsPicked, {
-          userId: nextCategoryUser._id,
-        });
+      if (!previousQuestionText.has(candidate.question)) {
+        question = candidate;
+        break;
       }
     }
+
+    if (!question) {
+      throw new Error(
+        `Unable to find an unused question for group ${groupId} after ${MAX_QUESTION_FETCH_ATTEMPTS} attempts`,
+      );
+    }
+
+    const user = nextCategoryUser
+      ? { id: nextCategoryUser._id, name: nextCategoryUser.name }
+      : undefined;
+
+    await ctx.runMutation(internal.questions.addGroupQuestion, {
+      group: questionContext.group,
+      user,
+      type: question.type,
+      difficulty: question.difficulty,
+      category: question.category,
+      question: question.question,
+      correctAnswer: question.correct_answer,
+      incorrectAnswers: question.incorrect_answers,
+    });
+
+    return null;
   },
 });
 
@@ -202,6 +295,15 @@ export const addGroupQuestion = internalMutation({
         [difficulty]: (group.totalDifficultyQuestions[difficulty] ?? 0) + 1,
       },
     });
+
+    if (user) {
+      const pickedUser = await ctx.db.get("users", user.id);
+      if (pickedUser) {
+        await ctx.db.patch("users", pickedUser._id, {
+          numQuestionsPicked: pickedUser.numQuestionsPicked + 1,
+        });
+      }
+    }
 
     await ctx.scheduler.runAfter(0, internal.users.sendQuestionReminderEmails, {
       questionId,
