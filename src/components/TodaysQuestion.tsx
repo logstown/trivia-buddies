@@ -230,7 +230,10 @@ export const TodaysQuestion = () => {
               className="btn btn-primary"
               onClick={() => {
                 if (!displayedAnswer) return;
-                void submitAnswer({ answer: displayedAnswer });
+                void submitAnswer({
+                  answer: displayedAnswer,
+                  stringDate: question.stringDate,
+                });
               }}
               disabled={!displayedAnswer}
             >

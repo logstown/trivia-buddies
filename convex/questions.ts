@@ -158,7 +158,9 @@ export const addNewQuestionForGroup = internalAction({
   handler: async (ctx, { groupId }) => {
     const questionContext: Awaited<
       ReturnType<
-        typeof ctx.runQuery<typeof internal.questions.getGroupDailyQuestionContext>
+        typeof ctx.runQuery<
+          typeof internal.questions.getGroupDailyQuestionContext
+        >
       >
     > = await ctx.runQuery(internal.questions.getGroupDailyQuestionContext, {
       groupId,
@@ -450,9 +452,10 @@ export const getQuestionAnswers = query({
 
 export const submitAnswer = mutation({
   args: {
+    stringDate: v.string(),
     answer: v.string(),
   },
-  handler: async (ctx, { answer }) => {
+  handler: async (ctx, { answer, stringDate }) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return null;
     const user = await ctx.db
@@ -463,7 +466,7 @@ export const submitAnswer = mutation({
     if (!user) return null;
 
     const todaysQuestion = await ctx.runQuery(api.questions.getQuestionByDate, {
-      stringDate: format(new Date(), "M-d-yyyy"),
+      stringDate,
     });
 
     if (!todaysQuestion) {
