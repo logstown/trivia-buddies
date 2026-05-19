@@ -286,12 +286,14 @@ export const TodaysQuestion = () => {
                     <PencilIcon size={13} />
                   </button>
                 </div>
+                <div
+                  className="mt-2 text-sm text-base-content/70 tooltip"
+                  data-tip="Each day, a new player is selected and the question will come
+                from that player's chosen category."
+                >
+                  <InfoIcon className="inline mb-0.5 mr-1" size={14} />
+                </div>
               </div>
-              <p className="mt-2 text-sm text-base-content/70">
-                <InfoIcon className="inline mb-0.5 mr-1" size={14} />
-                Each day, a new player is selected and the question will come
-                from that player's chosen category.
-              </p>
             </div>
 
             {group?.hostId === currentUser?._id && (
