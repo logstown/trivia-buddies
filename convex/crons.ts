@@ -3,6 +3,7 @@ import { internal } from "./_generated/api";
 
 const crons = cronJobs();
 
+console.log("Setting up cron jobs...", process.env.NODE_ENV);
 // Set different times for prod vs. dev
 const isProd = process.env.NODE_ENV === "production";
 const dailyTime = isProd
