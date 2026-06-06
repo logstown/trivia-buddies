@@ -17,7 +17,7 @@ export interface OpenTDBQuestion {
 
 interface OpenTDBQuestionResponse {
   response_code: number;
-  results?: OpenTDBQuestion[];
+  results?: OpenTDBQuestion[] | null;
 }
 
 const fetchCategoriesTDB = async (): Promise<OpenTDBCategory[]> => {
@@ -27,6 +27,8 @@ const fetchCategoriesTDB = async (): Promise<OpenTDBCategory[]> => {
   };
   return data.trivia_categories.sort((a, b) => a.name.localeCompare(b.name));
 };
+
+const OPENTDB_RATE_LIMIT_CODE = 5;
 
 const fetchQuestionTDB = async (
   categoryId?: number,
@@ -42,6 +44,11 @@ const fetchQuestionTDB = async (
   }
 
   const data = (await response.json()) as OpenTDBQuestionResponse;
+
+  if (data.response_code === OPENTDB_RATE_LIMIT_CODE) {
+    throw new Error(`OpenTDB rate limit hit (response_code=5) — will retry`);
+  }
+
   const question = data.results?.[0];
 
   if (question) {

@@ -3,12 +3,7 @@ import { internal } from "./_generated/api";
 
 const crons = cronJobs();
 
-console.log("Setting up cron jobs...", process.env.NODE_ENV);
-// Set different times for prod vs. dev
-const isProd = process.env.NODE_ENV === "production";
-const dailyTime = isProd
-  ? { hourUTC: 8, minuteUTC: 0 }
-  : { hourUTC: 9, minuteUTC: 0 };
+const dailyTime = { hourUTC: 8, minuteUTC: 0 }; // 8:00 AM UTC (4:00 AM EST) in prod, 8:00 AM UTC in dev
 
 crons.cron(
   "get daily question",
