@@ -1,0 +1,867 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Codex//ABRSD 2026-2027 Academic Calendar//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:ABRSD 2026-2027 Academic Calendar
+X-WR-CALDESC:Acton-Boxborough Regional School District 2026-2027 family aca
+ demic calendar. Built from the district PDF dated/voted January 22\, 2026
+ .
+BEGIN:VEVENT
+UID:481926a89327d53e@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Teacher Professional Learning - No School for Students
+DTSTART;VALUE=DATE:20260826
+DTEND;VALUE=DATE:20260829
+DESCRIPTION:Listed as Teacher's Prof Learning on the ABRSD family academic 
+ calendar.
+CATEGORIES:School Start/End
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:e470f88035ea6a9e@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:First Day of School - Grades K-7 and 9
+DTSTART;VALUE=DATE:20260831
+DTEND;VALUE=DATE:20260901
+DESCRIPTION:First day for students in grades K-7 and 9.
+CATEGORIES:School Start/End
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:29126abc266baf36@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:First Day of School - Grades 8 and 10-12
+DTSTART;VALUE=DATE:20260901
+DTEND;VALUE=DATE:20260902
+DESCRIPTION:First day for students in grades 8 and 10-12.
+CATEGORIES:School Start/End
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:f347df6b5893315a@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20260902
+DTEND;VALUE=DATE:20260903
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:85f2dd8a9f2879fc@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:No School
+DTSTART;VALUE=DATE:20260904
+DTEND;VALUE=DATE:20260905
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:62a31567394d6070@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Labor Day - No School
+DTSTART;VALUE=DATE:20260907
+DTEND;VALUE=DATE:20260908
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:f07c8655c9623455@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20260909
+DTEND;VALUE=DATE:20260910
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:411b8f0deebfcd60@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Rosh Hashanah - School Calendar Observance
+DTSTART;VALUE=DATE:20260912
+DTEND;VALUE=DATE:20260913
+DESCRIPTION:Listed as an additional religious/cultural observance not on a 
+ school day.
+CATEGORIES:Observance
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:56083cdc467493c9@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:R.J. Grey + ABRHS Early Release - 1:00/1:15 pm dismissal
+DTSTART;VALUE=DATE:20260914
+DTEND;VALUE=DATE:20260915
+DESCRIPTION:Junior high and high school early dismissal: R.J. Grey at 1:00 
+ pm and AB Regional High School at 1:15 pm.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:a877995141d9eeac@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20260916
+DTEND;VALUE=DATE:20260917
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:19835907665aedb9@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Yom Kippur - No School
+DTSTART;VALUE=DATE:20260921
+DTEND;VALUE=DATE:20260922
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:542d3b6a0b0218cb@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20260923
+DTEND;VALUE=DATE:20260924
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:e78ee581b7900d87@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20260930
+DTEND;VALUE=DATE:20261001
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:7fb12eefc21f5af6@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:R.J. Grey + ABRHS Early Release - 1:00/1:15 pm dismissal
+DTSTART;VALUE=DATE:20261005
+DTEND;VALUE=DATE:20261006
+DESCRIPTION:Junior high and high school early dismissal: R.J. Grey at 1:00 
+ pm and AB Regional High School at 1:15 pm.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:eea339ab59933e2e@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20261007
+DTEND;VALUE=DATE:20261008
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:925aabdf4de80534@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Indigenous Peoples' Day - No School
+DTSTART;VALUE=DATE:20261012
+DTEND;VALUE=DATE:20261013
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:62205717313a69a4@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20261014
+DTEND;VALUE=DATE:20261015
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:3f50d2699fb05ed7@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20261021
+DTEND;VALUE=DATE:20261022
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:14e780d6221fa91c@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:R.J. Grey + ABRHS Early Release - 1:00/1:15 pm dismissal
+DTSTART;VALUE=DATE:20261026
+DTEND;VALUE=DATE:20261027
+DESCRIPTION:Junior high and high school early dismissal: R.J. Grey at 1:00 
+ pm and AB Regional High School at 1:15 pm.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ccf6030a2bd4da19@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20261028
+DTEND;VALUE=DATE:20261029
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:a1391576f4ec37fc@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20261104
+DTEND;VALUE=DATE:20261105
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:90090a5341b6762b@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Diwali - School Calendar Observance
+DTSTART;VALUE=DATE:20261108
+DTEND;VALUE=DATE:20261109
+DESCRIPTION:Listed as an additional religious/cultural observance not on a 
+ school day.
+CATEGORIES:Observance
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:0e12f4347ad6b73b@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Veterans Day - No School
+DTSTART;VALUE=DATE:20261111
+DTEND;VALUE=DATE:20261112
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:47acb957cb0a3d15@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:R.J. Grey + ABRHS Early Release - 1:00/1:15 pm dismissal
+DTSTART;VALUE=DATE:20261116
+DTEND;VALUE=DATE:20261117
+DESCRIPTION:Junior high and high school early dismissal: R.J. Grey at 1:00 
+ pm and AB Regional High School at 1:15 pm.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:0d49876c5a24155e@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20261118
+DTEND;VALUE=DATE:20261119
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:382f5e2cba4790b4@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Half-Day Release Day
+DTSTART;VALUE=DATE:20261125
+DTEND;VALUE=DATE:20261126
+DESCRIPTION:Half-day release day. Dismissal times listed on the calendar: K
+ -6 at 12:50 pm\, R.J. Grey at 11:10 am\, AB Regional High School at 11:22
+  am.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:19f2b381765ca47a@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Thanksgiving Break - No School
+DTSTART;VALUE=DATE:20261126
+DTEND;VALUE=DATE:20261128
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:b37d65e3cac810bb@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:ABRHS Early Release - 1:15 pm dismissal
+DTSTART;VALUE=DATE:20261130
+DTEND;VALUE=DATE:20261201
+DESCRIPTION:High school only early dismissal at 1:15 pm.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:d5aa75866d2f81aa@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20261202
+DTEND;VALUE=DATE:20261203
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:370a3146de166288@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20261209
+DTEND;VALUE=DATE:20261210
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:411c640aefec439e@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:R.J. Grey + ABRHS Early Release - 1:00/1:15 pm dismissal
+DTSTART;VALUE=DATE:20261214
+DTEND;VALUE=DATE:20261215
+DESCRIPTION:Junior high and high school early dismissal: R.J. Grey at 1:00 
+ pm and AB Regional High School at 1:15 pm.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ebfd34d1dc9fe9b0@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20261216
+DTEND;VALUE=DATE:20261217
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:35cfa002e1d59437@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Half-Day Release Day
+DTSTART;VALUE=DATE:20261223
+DTEND;VALUE=DATE:20261224
+DESCRIPTION:Half-day release day. Dismissal times listed on the calendar: K
+ -6 at 12:50 pm\, R.J. Grey at 11:10 am\, AB Regional High School at 11:22
+  am.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:76f772c1269631fa@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Winter Vacation - No School
+DTSTART;VALUE=DATE:20261224
+DTEND;VALUE=DATE:20270102
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:45afbbbd289a37f0@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Christmas Day - No School
+DTSTART;VALUE=DATE:20261225
+DTEND;VALUE=DATE:20261226
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:a60224a4e662c5c8@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:New Year's Day - No School
+DTSTART;VALUE=DATE:20270101
+DTEND;VALUE=DATE:20270102
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:3ce2750690dc5c4a@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270106
+DTEND;VALUE=DATE:20270107
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:06e28f69a4abf256@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:R.J. Grey + ABRHS Early Release - 1:00/1:15 pm dismissal
+DTSTART;VALUE=DATE:20270111
+DTEND;VALUE=DATE:20270112
+DESCRIPTION:Junior high and high school early dismissal: R.J. Grey at 1:00 
+ pm and AB Regional High School at 1:15 pm.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:a80890182be6da6a@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270113
+DTEND;VALUE=DATE:20270114
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:1a34c8c78c57466b@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Martin Luther King Jr. Day - No School
+DTSTART;VALUE=DATE:20270118
+DTEND;VALUE=DATE:20270119
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:189c3d960c115bfb@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270120
+DTEND;VALUE=DATE:20270121
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:fd5c441736bbd0cd@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:ABRHS Early Release - 1:15 pm dismissal
+DTSTART;VALUE=DATE:20270125
+DTEND;VALUE=DATE:20270126
+DESCRIPTION:High school only early dismissal at 1:15 pm.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:cd683c50b13ca542@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270127
+DTEND;VALUE=DATE:20270128
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ad10c75df04450d5@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270203
+DTEND;VALUE=DATE:20270204
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:933548503d09c0ef@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Lunar New Year - School Calendar Observance
+DTSTART;VALUE=DATE:20270206
+DTEND;VALUE=DATE:20270207
+DESCRIPTION:Listed as an additional religious/cultural observance not on a 
+ school day.
+CATEGORIES:Observance
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:6c8bfddcfbdd05b0@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:R.J. Grey + ABRHS Early Release - 1:00/1:15 pm dismissal
+DTSTART;VALUE=DATE:20270208
+DTEND;VALUE=DATE:20270209
+DESCRIPTION:Junior high and high school early dismissal: R.J. Grey at 1:00 
+ pm and AB Regional High School at 1:15 pm.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:52fd55cafb2504e4@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270210
+DTEND;VALUE=DATE:20270211
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:15a1621c9239efa8@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:February Vacation - No School
+DTSTART;VALUE=DATE:20270215
+DTEND;VALUE=DATE:20270220
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:518949eacaeed0de@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Presidents' Day - No School
+DTSTART;VALUE=DATE:20270215
+DTEND;VALUE=DATE:20270216
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:f9d875d8bbc1a019@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270224
+DTEND;VALUE=DATE:20270225
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:7aba7cc96ad8430e@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:R.J. Grey + ABRHS Early Release - 1:00/1:15 pm dismissal
+DTSTART;VALUE=DATE:20270301
+DTEND;VALUE=DATE:20270302
+DESCRIPTION:Junior high and high school early dismissal: R.J. Grey at 1:00 
+ pm and AB Regional High School at 1:15 pm.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2a8268fbd5d41071@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270303
+DTEND;VALUE=DATE:20270304
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:9c9ac4dd4aceb6f6@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Eid al-Fitr - No School
+DTSTART;VALUE=DATE:20270310
+DTEND;VALUE=DATE:20270311
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:b84d0425b8e84043@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:ABRHS Early Release - 1:15 pm dismissal
+DTSTART;VALUE=DATE:20270315
+DTEND;VALUE=DATE:20270316
+DESCRIPTION:High school only early dismissal at 1:15 pm.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:4366664df11e38e7@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270317
+DTEND;VALUE=DATE:20270318
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:de8dfb4746abd4e3@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270324
+DTEND;VALUE=DATE:20270325
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ae3f60414f8427f2@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Good Friday - No School
+DTSTART;VALUE=DATE:20270326
+DTEND;VALUE=DATE:20270327
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:89e89cccdcfd0b91@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Easter - School Calendar Observance
+DTSTART;VALUE=DATE:20270328
+DTEND;VALUE=DATE:20270329
+DESCRIPTION:Listed as an additional religious/cultural observance not on a 
+ school day.
+CATEGORIES:Observance
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:ae8f05206db16d47@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:R.J. Grey + ABRHS Early Release - 1:00/1:15 pm dismissal
+DTSTART;VALUE=DATE:20270329
+DTEND;VALUE=DATE:20270330
+DESCRIPTION:Junior high and high school early dismissal: R.J. Grey at 1:00 
+ pm and AB Regional High School at 1:15 pm.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:35f336aa8438213e@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270331
+DTEND;VALUE=DATE:20270401
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:6b0471a92f464741@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270407
+DTEND;VALUE=DATE:20270408
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:4ebb369cc69c3596@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:ABRHS Early Release - 1:15 pm dismissal
+DTSTART;VALUE=DATE:20270412
+DTEND;VALUE=DATE:20270413
+DESCRIPTION:High school only early dismissal at 1:15 pm.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:a0ac057e273d0c3f@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270414
+DTEND;VALUE=DATE:20270415
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:4cdce49ca96579cb@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:April Vacation - No School
+DTSTART;VALUE=DATE:20270419
+DTEND;VALUE=DATE:20270424
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:64bbf549b0a98fa2@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Patriots' Day - No School
+DTSTART;VALUE=DATE:20270419
+DTEND;VALUE=DATE:20270420
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:0d49187d60f1024f@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270428
+DTEND;VALUE=DATE:20270429
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:cbdbab66d370e344@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:R.J. Grey + ABRHS Early Release - 1:00/1:15 pm dismissal
+DTSTART;VALUE=DATE:20270503
+DTEND;VALUE=DATE:20270504
+DESCRIPTION:Junior high and high school early dismissal: R.J. Grey at 1:00 
+ pm and AB Regional High School at 1:15 pm.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:9951474e7cd77eb4@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270505
+DTEND;VALUE=DATE:20270506
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:b900073a2f09cee1@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270512
+DTEND;VALUE=DATE:20270513
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:3c7ea8a0bf53cf93@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Eid al-Adha - No School
+DTSTART;VALUE=DATE:20270517
+DTEND;VALUE=DATE:20270518
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:66abdaa4184e73fa@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270519
+DTEND;VALUE=DATE:20270520
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:5c7e48c53279930b@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:ABRHS Early Release - 1:15 pm dismissal
+DTSTART;VALUE=DATE:20270524
+DTEND;VALUE=DATE:20270525
+DESCRIPTION:High school only early dismissal at 1:15 pm.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:6d84341d56b0b230@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270526
+DTEND;VALUE=DATE:20270527
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:5e0696f89e89aa91@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Memorial Day - No School
+DTSTART;VALUE=DATE:20270531
+DTEND;VALUE=DATE:20270601
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:7049ae4920e7bb63@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270602
+DTEND;VALUE=DATE:20270603
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:4369af00e6bb97eb@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:ABRHS Graduation
+DTSTART;VALUE=DATE:20270604
+DTEND;VALUE=DATE:20270605
+DESCRIPTION:Graduation listed on the ABRSD family academic calendar.
+CATEGORIES:Graduation
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:a615760b3f6f6d0e@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270609
+DTEND;VALUE=DATE:20270610
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:bb2ee0001f65f894@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:K-6 Early Release - 12:50 pm dismissal
+DTSTART;VALUE=DATE:20270616
+DTEND;VALUE=DATE:20270617
+DESCRIPTION:Every Wednesday is early dismissal at 12:50 pm for K-6\, exclud
+ ing no-school days and separate half-day release days.
+CATEGORIES:Early Release
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:b9f66cd346bbced8@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Tentative Last Day of School
+DTSTART;VALUE=DATE:20270617
+DTEND;VALUE=DATE:20270618
+DESCRIPTION:Last day is subject to change due to snow days.
+CATEGORIES:School Start/End
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:58af2020836d5453@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Juneteenth - School Calendar Observance
+DTSTART;VALUE=DATE:20270619
+DTEND;VALUE=DATE:20270620
+DESCRIPTION:Listed as an additional religious/cultural observance not on a 
+ school day.
+CATEGORIES:Observance
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:b0ed2de93d03cf2d@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:185th Day of School
+DTSTART;VALUE=DATE:20270624
+DTEND;VALUE=DATE:20270625
+DESCRIPTION:Listed on the district calendar as the 185th day of school.
+CATEGORIES:School Start/End
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:88027c770d0f63cb@abrsd-academic-calendar
+DTSTAMP:20260831T134718Z
+SUMMARY:Independence Day Observed - No School
+DTSTART;VALUE=DATE:20270705
+DTEND;VALUE=DATE:20270706
+DESCRIPTION:Highlighted on the July 2027 calendar grid.
+CATEGORIES:No School
+TRANSP:TRANSPARENT
+END:VEVENT
+END:VCALENDAR
